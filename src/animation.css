@@ -1,0 +1,27 @@
+
+.svgFloater-enter {
+  opacity: 0.01;
+}
+
+.svgFloater-enter.svgFloater-enter-active {
+  opacity: 1;
+  transition: opacity 500ms ease-in;
+}
+
+.svgFloater-leave {
+  opacity: 1;
+}
+
+.svgFloater-leave.svgFloater-leave-active {
+  opacity: 0.01;
+  transition: opacity 300ms ease-in;
+}
+
+.svgFloater-appear {
+  opacity: 0.01;
+}
+
+.svgFloater-appear.svgFloater-appear-active {
+  opacity: 1;
+  transition: opacity .5s ease-in;
+}
