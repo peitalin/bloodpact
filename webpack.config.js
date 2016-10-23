@@ -1,18 +1,35 @@
+
 var path = require('path');
+var process = require('process');
+
+var isProduction = process.env.NODE_ENV === 'production';
+var buildPath = path.resolve(__dirname, 'public');
+var mainPath = path.resolve(__dirname, 'src', 'main.js');
+
+console.log("Is production: " + isProduction);
+
+var entryEnv = isProduction
+    ? mainPath
+    : [
+        'webpack/hot/only-dev-server',
+        'webpack-dev-server/client?http://localhost:3333',
+        'react-hot-loader/patch',
+        mainPath
+];
+
+var pluginsEnv = isProduction
+    ? ['transform-decorators-legacy']
+    : ['transform-decorators-legacy', 'react-hot-loader/babel'];
+
 
 module.exports = {
-    entry: [
-        'webpack-dev-server/client?http://localhost:3333',
-        'webpack/hot/only-dev-server',
-        'react-hot-loader/patch',
-        './src/main.js'
-    ],
+    entry: entryEnv,
     output: {
-        path: path.resolve(__dirname, 'public/'),
+        path: buildPath,
         filename: 'bundle.js',
     },
     debug: true,
-    devtool: 'source-map',
+    devtool: 'inline-source-map',
     devServer: {
         inline: true,
         contentBase: './src',
@@ -21,11 +38,11 @@ module.exports = {
     module: {
         loaders: [
             {
-                test: /\.js$/,
+                test: /\.js|.jsx?$/,
                 exclude: /node_modules/,
                 loader: 'babel',
                 query: {
-                    plugins: ['transform-decorators-legacy', 'react-hot-loader/babel'],
+                    plugins: pluginsEnv,
                     presets: ['react', 'es2015', 'stage-2']
                 }
             },
@@ -34,22 +51,24 @@ module.exports = {
                 loader: 'json-loader'
             },
             {
-                test: /\.svg$/,
-                loader: 'file',
-                include: path.resolve(__dirname, './src/img')
-            },
-            {
-                test: /\.(jpg|png)$/,
-                loader: 'file?name=[path][name].[hash].[ext]',
-                include: path.resolve(__dirname, './src/img')
+                test: /\.(jpg|svg|gif|png)$/,
+                loader: 'file?name=img/[name].[ext]',
+                include: path.resolve(__dirname, 'src', 'img')
             },
             {
                 test: /\.css$/,
-                loader: 'style!css'
+                loader: 'style!css?sourceMap!resolve-url',
+                include: path.resolve(__dirname, 'src')
+            },
+            {
+                test: /\.sass$/,
+                loader: 'style!css!resolve-url!sass?sourceMap',
+                include: path.resolve(__dirname, 'src')
             },
             {
                 test: /\.scss$/,
-                loader: 'css-loader!sass-loader'
+                loader: 'style!css!resolve-url!sass?sourceMap',
+                include: path.resolve(__dirname, 'src')
             }
         ]
     }
