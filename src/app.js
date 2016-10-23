@@ -5,7 +5,6 @@ import './app.sass';
 import './animation.css';
 
 import Waypoint from 'react-waypoint';
-import * as snapsvg from 'snapsvg-cjs';
 import ReactCSSTransitionGroup from 'react-addons-css-transition-group';
 
 
@@ -23,14 +22,6 @@ class SVGFloater extends React.Component {
         switch (this.state.message) {
             case "IN":
                 return <img src={this.props.svgSrc} />
-                return <ReactCSSTransitionGroup
-                            transitionName='svgFloater'
-                            transitionAppear={true}
-                            transitionAppearTimeout={500}
-                            transitionLeaveTimeout={500}
-                            transitionEnterTimeout={500}>
-                            <img src={this.props.svgSrc}/>
-                        </ReactCSSTransitionGroup>
             default:
                 return null
         }
@@ -107,7 +98,7 @@ class App extends React.Component {
 
                 <h1>Donate Blood and gift insurance to Family and Friends.</h1>
                 <div className='container'>
-                    <SVGFloater svgSrc="./img/blooddrop2.svg"/>
+                    <SVGFloater svgSrc={require('./img/blooddrop2.svg')} />
                     <div className="textBox">
                         1) increase aggregate levels of blood donation
                         (can't just pay for blood since that's immoral and can
@@ -118,7 +109,7 @@ class App extends React.Component {
                 <div className="spacer">a</div>
 
                 <div className='container'>
-                    <SVGFloater svgSrc="./img/perfusion.svg"/>
+                    <SVGFloater svgSrc={require("./img/perfusion.svg")} />
                     <div className="textBox">
                         2) Solves the "adverse selection problem" in health insurance:
                         people conceal information about their health status and their habits
@@ -127,7 +118,7 @@ class App extends React.Component {
                 </div>
                 <div className="spacer">a</div>
                 <div className='container'>
-                    <SVGFloater svgSrc="./img/finger.svg"/>
+                    <SVGFloater svgSrc={require("./img/finger.svg")} />
                     <div className="textBox">
                         3) By donating blood we can do blood tests and screen doners for
                         viable “blood-pact” candidates. This reveals information about
@@ -135,11 +126,11 @@ class App extends React.Component {
                     </div>
                 </div>
                 <div className="spacer">a</div>
-                <SVGFloater svgSrc="./img/bloodvial_many.svg"/>
+                <SVGFloater svgSrc={require("./img/bloodvial_many.svg")} />
                 <div className="spacer">a</div>
-                <SVGFloater svgSrc="./img/bloodpack.svg"/>
+                <SVGFloater svgSrc={require("./img/bloodpack.svg")} />
                 <div className="spacer">a</div>
-                <SVGFloater svgSrc="./img/doctor_she.svg"/>
+                <SVGFloater svgSrc={require("./img/doctor_she.svg")} />
                 <div className="spacer">a</div>
             </div>
         );
