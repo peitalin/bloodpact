@@ -1,7 +1,7 @@
 
 import React from 'react';
 
-import './app.scss';
+import './app.sass';
 import './animation.css';
 
 import Waypoint from 'react-waypoint';
@@ -22,6 +22,7 @@ class SVGFloater extends React.Component {
     _renderSVG() {
         switch (this.state.message) {
             case "IN":
+                return <img src={this.props.svgSrc} />
                 return <ReactCSSTransitionGroup
                             transitionName='svgFloater'
                             transitionAppear={true}
@@ -31,7 +32,7 @@ class SVGFloater extends React.Component {
                             <img src={this.props.svgSrc}/>
                         </ReactCSSTransitionGroup>
             default:
-                return <div className="svgFloater-placeholder" />
+                return null
         }
     }
 
@@ -43,18 +44,23 @@ class SVGFloater extends React.Component {
 
     render() {
         return (
-            <div>
-				<div className="waypoint-line"><hr/>Waypoint: Line
-                    <Waypoint
-                        onLeave={this._setMessage.bind(this, 'OUT')}
-                        topOffset={-1200} />
-                <div className="spacer" style={{lineHeight: "50px"}}><hr/></div>
-                    <Waypoint
-                        onEnter={this._setMessage.bind(this, 'IN')}
-                        topOffset={-1000}
-                        bottomOffset={200} />
+            <div className="svgFloater">
+                <Waypoint
+                    onLeave={this._setMessage.bind(this, 'OUT')}
+                    topOffset={-1000}
+                />
+                <Waypoint
+                    onEnter={this._setMessage.bind(this, 'IN')}
+                    bottomOffset={150}
+                />
+                <ReactCSSTransitionGroup
+                    transitionName='svgFloater'
+                    transitionAppear={true}
+                    transitionAppearTimeout={500}
+                    transitionLeaveTimeout={500}
+                    transitionEnterTimeout={500}>
                     {this._renderSVG()}
-                </div>
+                </ReactCSSTransitionGroup>
             </div>
         )
     }
@@ -85,66 +91,55 @@ class App extends React.Component {
         this.setState({
             scroll: event.srcElement.body.scrollTop
         })
-        console.log(`Scrolling: ${this.state.scroll}`);
+        // console.log(`Scrolling: ${this.state.scroll}`);
     }
 
     render() {
         return (
             <div>
-                <img src="./img/perfusion2.png"/>
 
-                <h1>BloodPact: Blood-Backed Health Insurance</h1>
-
-				<div>
-                    <h1>Donate Blood and gift insurance to Family and Friends.</h1>
+                <div className="parallaxBox">
+                    <div className="logo">
+                        <h1>BloodPact: Blood-Backed Health Insurance</h1>
+                    </div>
+                    <div className="fore-heart"></div>
                 </div>
 
+                <h1>Donate Blood and gift insurance to Family and Friends.</h1>
                 <div className='container'>
-                    <div className="svgContainer">
-                        <SVGFloater svgSrc="./img/blooddrop2.svg"/>
-                    </div>
+                    <SVGFloater svgSrc="./img/blooddrop2.svg"/>
                     <div className="textBox">
-                        <p>1) increase aggregate levels of blood donation
-                            (can't just pay for blood since that's immoral and can
-                            actually decrease levels of donation)</p>
+                        1) increase aggregate levels of blood donation
+                        (can't just pay for blood since that's immoral and can
+                        actually decrease levels of donation)
                     </div>
                 </div>
 
                 <div className="spacer">a</div>
 
                 <div className='container'>
-                    <div className="svgContainer">
-                        <SVGFloater svgSrc="./img/perfusion.svg"/>
-                    </div>
+                    <SVGFloater svgSrc="./img/perfusion.svg"/>
                     <div className="textBox">
-                        <p>2) Solves the "adverse selection problem" in health insurance:
-                            people conceal information about their health status and their habits
-                            (smoking, diet) in order to obtain cheaper premiums.</p>
+                        2) Solves the "adverse selection problem" in health insurance:
+                        people conceal information about their health status and their habits
+                        (smoking, diet) in order to obtain cheaper premiums.
                     </div>
                 </div>
                 <div className="spacer">a</div>
                 <div className='container'>
-                    <div className="svgContainer">
-                        <SVGFloater svgSrc="./img/finger.svg"/>
-                    </div>
+                    <SVGFloater svgSrc="./img/finger.svg"/>
                     <div className="textBox">
-                        <p>3) By donating blood we can do blood tests and screen doners for
-                            viable “blood-pact” candidates. This reveals information about
-                            their diet, habits and actual state of health.</p>
+                        3) By donating blood we can do blood tests and screen doners for
+                        viable “blood-pact” candidates. This reveals information about
+                        their diet, habits and actual state of health.
                     </div>
                 </div>
                 <div className="spacer">a</div>
-                <div className="svgContainer">
-                    <SVGFloater svgSrc="./img/bloodvial_many.svg"/>
-                </div>
+                <SVGFloater svgSrc="./img/bloodvial_many.svg"/>
                 <div className="spacer">a</div>
-                <div className="svgContainer">
-                    <SVGFloater svgSrc="./img/bloodpack.svg"/>
-                </div>
+                <SVGFloater svgSrc="./img/bloodpack.svg"/>
                 <div className="spacer">a</div>
-                <div className="svgContainer">
-                    <SVGFloater svgSrc="./img/doctor_she.svg"/>
-                </div>
+                <SVGFloater svgSrc="./img/doctor_she.svg"/>
                 <div className="spacer">a</div>
             </div>
         );

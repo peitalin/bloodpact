@@ -1,0 +1,120 @@
+
+
+$font-stack:    Open Sans, Helvetica, sans-serif
+$primary-color: #933
+$body-bg: transparent
+
+
+body
+    font: 100% $font-stack
+    font-size: 1em
+    color: #222
+    width: 100%
+    margin: 0px
+
+h1
+    font-size: 1.5em
+    text-align: center
+    color: $primary-color
+
+
+.header
+    position: fixed
+    top: 0
+    left: 0
+    width: 100%
+    background-color: #cab
+
+
+.footer
+    position: fixed
+    bottom: 0
+    left: 0
+    width: 100%
+    background-color: #cab
+
+
+// Parallax
+.parallaxBox
+    position: relative
+    height: 500px
+    background:
+        image: url('./img/bg1.png')
+        size: auto 500px
+        position: top center
+        attachment: fixed
+
+.logo
+    height: 100px
+    width: 100%
+    display: flex
+    align-items: center
+    justify-content: center
+    background:
+        color: transparentize(black, 0.7)
+        position: center
+    position: absolute
+    top: 50%
+    margin-top: -50px
+
+.fore-heart
+    height: 150px
+    width: 150px
+    background:
+        image: url("./img/doctor_he2.svg")
+        color: transparentize(black, 1)
+    position: absolute
+    left: 5%
+    bottom: -1px
+
+
+
+
+
+
+$svgDimensions: 150px
+
+@media screen and (min-width:600px)
+    .container
+        border: 1px solid #999
+        position: relative
+        display: flex
+        flex-direction: row
+        text-align: center
+        background-color: #c89
+        height: $svgDimensions
+
+
+@media screen and (max-width:599px)
+    .container
+        position: relative
+        display: flex
+        flex-direction: column
+        text-align: center
+        background-color: #c89
+        height: $svgDimensions
+
+
+.textBox
+    display: flex
+    justify-content: center
+    text-align: center
+    align-self: center
+    flex: 2
+    margin: 10px
+
+
+.svgFloater
+    flex: 1
+    max-width: $svgDimensions
+    max-height: $svgDimensions
+
+.spacer
+    font-size: 20px
+    line-height: $svgDimensions
+    text-align: center
+    color: #ccc
+
+
+
+
