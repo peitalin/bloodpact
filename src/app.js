@@ -90,7 +90,7 @@ class App extends React.Component {
 
         console.log(`Scrolling: ${this.state.scrollTop}`);
 
-        let logo = document.getElementById('logo')
+        let logo = document.getElementById('logo1')
         logo.style.transform = `translate(0px, ${scrollTop/2}%)`
 
         let logo2 = document.getElementById('logo2')
@@ -131,12 +131,22 @@ class App extends React.Component {
 
         // 2nd fixed container
         let fixedContainer2 = document.getElementById('fixedContainer2')
-        let lowerThreshold = window.innerHeight*2 + 100
-        if ((lowerThreshold <= scrollTop) && (scrollTop <= window.innerHeight*3+2*100)) {
+        let lowerThreshold2 = window.innerHeight*2 + 100
+        if ((lowerThreshold2 <= scrollTop) && (scrollTop <= window.innerHeight*3+2*100)) {
             fixedContainer2.style.position = 'fixed'
         } else {
             fixedContainer2.style.position = 'relative'
         }
+
+        // 3rd fixed container
+        let fixedContainer3 = document.getElementById('fixedContainer3')
+        let lowerThreshold3 = window.innerHeight*3 + 2*100
+        if ((lowerThreshold3 <= scrollTop) && (scrollTop <= window.innerHeight*4+3*100)) {
+            fixedContainer3.style.position = 'fixed'
+        } else {
+            fixedContainer3.style.position = 'relative'
+        }
+
 
 
 
@@ -188,7 +198,7 @@ class App extends React.Component {
                     <img className='people' id="fore-man" src={require('./img/doctor_he2.svg')} />
                     <img className='people' id="fore-man2" src={require('./img/doctor_he4.svg')} />
                     <img className='people' id="fore-woman" src={require('./img/doctor_she.svg')} />
-                    <div id="logo">
+                    <div className='logo' id="logo1">
                         <h1>Bloodpact: Blood-Backed Health Insurance</h1>
                     </div>
                 </div>
@@ -207,7 +217,7 @@ class App extends React.Component {
                 <div className='parallax' id="parallaxBox2">
                     <div id="parallaxDither2"></div>
                     <img id="heart-beat" src={require("./img/heart.svg")} />
-                    <div id="logo2">
+                    <div className='logo' id="logo2">
                         <h1>Give Blood and Gift Insurance to Family and Friends.</h1>
                     </div>
                 </div>
@@ -225,12 +235,14 @@ class App extends React.Component {
 
 
                 <div className='parallax' id="parallaxBox3">
-                    <div id="logo3">
+                    <div className='logo' id="logo3">
                         <h1>One pint saves three lives</h1>
                     </div>
                 </div>
 
-                <div className='container'>
+
+                {this._placeholder(window.innerHeight, 3)}
+                <div id='fixedContainer3' className='container'>
                     <SVGFloater svgSrc={require("./img/finger.svg")} />
                     <div className="textBox">
                         3) By donating blood we can do blood tests and screen doners for
@@ -262,6 +274,8 @@ class App extends React.Component {
                     </div>
                 </div>
 
+                <div className="spacer">a</div>
+                <div className="spacer">a</div>
                 <div className="spacer">a</div>
                 <div className="spacer">a</div>
             </div>
