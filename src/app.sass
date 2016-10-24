@@ -1,21 +1,34 @@
 
 
 $font-stack:    Open Sans, Helvetica, sans-serif
-$primary-color: #933
+$primary-color: #812
 $body-bg: transparent
 
+/* * */
+/*   -webkit-box-sizing: border-box */
+/*      -moz-box-sizing: border-box */
+/*           box-sizing: border-box */
 
 body
     font: 100% $font-stack
     font-size: 1em
     color: #222
-    width: 100%
+    width: 100vw
     margin: 0px
+    padding: 0px
 
 h1
-    font-size: 1.5em
+    font-size: 1.6em
+    font-weight:  400
+    font-variant: small-caps
     text-align: center
-    color: $primary-color
+    color: #eee
+
+h2
+    font-style: italic
+    font-size: 1.4em
+    text-align: center
+    color: #eee
 
 
 .header
@@ -35,73 +48,153 @@ h1
 
 
 // Parallax
-.parallaxBox
+.parallax
     position: relative
-    height: 500px
+    height: 100vh
+    overflow: hidden
     background:
-        image: url('./img/bg1.png')
-        size: auto 500px
-        position: top center
+        size: auto 100vh
+        position: 50% 50%
         attachment: fixed
 
-.logo
-    height: 100px
+#parallaxBox1
+    background-image: url('./img/bg1.png')
+
+#parallaxBox2
+    background-image: url('./img/bg2.jpg')
+
+#parallaxBox3
+    background-image: url('./img/bg3.jpg')
+
+
+#parallaxDither
+    height: 100vh
+    opacity: 0
+    background:
+        size: auto 100vh
+        position: top center
+        attachment: fixed
+        color: #812
+
+
+#logo
+    height: 80px
     width: 100%
     display: flex
     align-items: center
     justify-content: center
     background:
-        color: transparentize(black, 0.7)
+        color: transparentize($primary-color, 0.2)
         position: center
     position: absolute
     top: 50%
-    margin-top: -50px
+    margin-top: 10px
 
-.fore-heart
+.people
     height: 150px
     width: 150px
-    background:
-        image: url("./img/doctor_he2.svg")
-        color: transparentize(black, 1)
     position: absolute
-    left: 5%
     bottom: -1px
 
+#fore-man
+    left: 10%
+
+#fore-man2
+    left: 5%
+
+#fore-woman
+    left: 0%
+
+
+
+
+#logo2
+    height: 80px
+    width: 100%
+    display: flex
+    align-items: center
+    justify-content: center
+    background:
+        color: transparentize($primary-color, 0.2)
+    position: absolute
+    top: 50%
+    margin-top: 20px
+
+
+#heart-beat
+    height: 280px
+    position: absolute
+    top: -75%
+    right: 14%
+
+
+// Parallax 3
+
+#logo3
+    height: 80px
+    width: 100%
+    display: flex
+    align-items: center
+    justify-content: center
+    background:
+        color: transparentize($primary-color, 0.2)
+    position: absolute
+    top: 50%
+    margin-top: 62px
 
 
 
 
 
-$svgDimensions: 150px
+
+
+
+
+
+
+////////////////////////////////////////////
+
+
+$svgDimensions: 100px
 
 @media screen and (min-width:600px)
     .container
-        border: 1px solid #999
+        border: 0px solid #333
+        color: #eee
         position: relative
         display: flex
         flex-direction: row
         text-align: center
-        background-color: #c89
+        background-color: #222
         height: $svgDimensions
+        z-index: 1
+        top: 0
+        width: 100%
+
 
 
 @media screen and (max-width:599px)
     .container
+        border: 0px solid #111
+        color: #eee
         position: relative
         display: flex
-        flex-direction: column
+        /* flex-direction: column */
+        flex-direction: row
         text-align: center
-        background-color: #c89
+        background-color: #222
         height: $svgDimensions
+        z-index: 1
+        top: 0
+
 
 
 .textBox
     display: flex
     justify-content: center
-    text-align: center
-    align-self: center
+    align-items: center
     flex: 2
-    margin: 10px
+    width: auto
 
 
 .svgFloater
@@ -110,7 +203,7 @@ $svgDimensions: 150px
     max-height: $svgDimensions
 
 .spacer
-    font-size: 20px
+    font-size: 0.5em
     line-height: $svgDimensions
     text-align: center
     color: #ccc
