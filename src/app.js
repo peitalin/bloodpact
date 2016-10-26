@@ -138,7 +138,8 @@ class App extends React.Component {
     handleResize() {
         // THRESHOLDS FOR Fixed containers/placeholders
         // window-height * n plus (n-1)*100px for the placeholder
-        const getWindowThreshold = (n) => window.innerHeight*n + (n-1)*100
+        const bannerHeight = document.getElementById('fixedContainer1').clientHeight
+        const getWindowThreshold = (n) => window.innerHeight*n + (n-1)*bannerHeight
         this.setState({
             threshold1: getWindowThreshold(1),
             threshold2: getWindowThreshold(2),
@@ -187,6 +188,7 @@ class App extends React.Component {
         this.setState({
             scrollTop: event.srcElement.body.scrollTop
         })
+        this.handleResize()
         let scrollTop = this.state.scrollTop
         // console.log(`Scrolling: ${this.state.scrollTop}`);
 
@@ -254,22 +256,22 @@ class App extends React.Component {
 
         // 1st fixed container
         if (threshold1 <= scrollTop && scrollTop <= threshold2) {
-            fixedContainer1.style.position = 'fixed'
+            fixedContainer1.style.visibility = 'visible'
         } else {
-            fixedContainer1.style.position = 'relative'
+            fixedContainer1.style.visibility = 'hidden'
         }
 
         // 2nd fixed container
         if (threshold2 <= scrollTop && scrollTop <= threshold3) {
-            fixedContainer2.style.position = 'fixed'
+            fixedContainer2.style.visibility = 'visible'
         } else {
-            fixedContainer2.style.position = 'relative'
+            fixedContainer2.style.visibility = 'hidden'
         }
         // 3rd fixed container
         if (threshold3 <= scrollTop && scrollTop <= threshold4) {
-            fixedContainer3.style.position = 'fixed'
+            fixedContainer3.style.visibility = 'visible'
         } else {
-            fixedContainer3.style.position = 'relative'
+            fixedContainer3.style.visibility = 'hidden'
         }
 
 
@@ -297,20 +299,6 @@ class App extends React.Component {
 
 
 
-    _placeholder(lowerThreshold, upperThreshold) {
-        // inserts a placeholder for the 'fixed' (floating) banner when
-        // viewport is between lower and upper thresholds
-        let scrollTop = this.state.scrollTop
-        if (lowerThreshold <= scrollTop && scrollTop <=  upperThreshold) {
-            return <div id='tempPlaceholder' className='container'>
-                    <div className="textBox">placeholder</div>
-                </div>
-        } else {
-            return null
-        }
-    }
-
-
     render() {
         return (
             <div>
@@ -326,15 +314,23 @@ class App extends React.Component {
                 </div>
 
 
-                {this._placeholder(this.state.threshold1, this.state.threshold2)}
-                <div id='fixedContainer1' className='container'>
-                    <img id="" src={require("./img/blooddrop2.svg")} />
+                <div className='container'>
+                    <img src={require("./img/blooddrop2.svg")} />
                     <div className="textBox">
                         1) Increase aggregate levels of blood donation
                         (can't just pay for blood since that's immoral and can
                         actually decrease levels of donation)
                     </div>
                 </div>
+                <div id='fixedContainer1' className='containerFixed'>
+                    <img src={require("./img/blooddrop2.svg")} />
+                    <div className="textBox">
+                        1) Increase aggregate levels of blood donation
+                        (can't just pay for blood since that's immoral and can
+                        actually decrease levels of donation)
+                    </div>
+                </div>
+
 
                 <div className='parallax' id="parallaxBox2">
                     <div className='dither' id="parallaxDither2"></div>
@@ -345,9 +341,16 @@ class App extends React.Component {
                 </div>
 
 
-                {this._placeholder(this.state.threshold2, this.state.threshold3)}
-                <div id='fixedContainer2' className='container'>
-                    <img src={require("./img/blooddrop2.svg")} />
+                <div className='container'>
+                    <div className="textBox">
+                    <img src={require("./img/perfusion.svg")} />
+                        2) Solves incentive issues in health insurance:
+                        people conceal information about their health status and their habits
+                        (smoking, diet) to obtain cheaper premiums.
+                    </div>
+                </div>
+                <div id='fixedContainer2' className='containerFixed'>
+                    <img src={require("./img/perfusion.svg")} />
                     <div className="textBox">
                         2) Solves incentive issues in health insurance:
                         people conceal information about their health status and their habits
@@ -364,9 +367,16 @@ class App extends React.Component {
                 </div>
 
 
-                {this._placeholder(this.state.threshold3, this.state.threshold4)}
-                <div id='fixedContainer3' className='container'>
-                    <img src={require("./img/blooddrop2.svg")} />
+                <div className='container'>
+                    <img src={require("./img/bloodtest.svg")} />
+                    <div className="textBox">
+                        3) By donating blood we can do blood tests and screen doners for
+                        viable “blood-pact” candidates. This reveals better information about
+                        their diet, habits and actual state of health.
+                    </div>
+                </div>
+                <div id='fixedContainer3' className='containerFixed'>
+                    <img src={require("./img/bloodtest.svg")} />
                     <div className="textBox">
                         3) By donating blood we can do blood tests and screen doners for
                         viable “blood-pact” candidates. This reveals better information about
