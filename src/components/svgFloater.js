@@ -1,7 +1,7 @@
 
 import React from 'react';
 
-import '../animation.css';
+import './animation.css';
 
 import Waypoint from 'react-waypoint';
 import ReactCSSTransitionGroup from 'react-addons-css-transition-group';
@@ -52,3 +52,4 @@ class SVGFloater extends React.Component {
     }
 }
 
+export default SVGFloater;

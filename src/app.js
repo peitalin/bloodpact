@@ -2,7 +2,6 @@
 
 import React from 'react'
 import './app.sass'
-import './animation.css'
 import SVGFloater from './components/svgFloater.js'
 // import { Field, reduxForm } from 'redux-form'
 
@@ -27,7 +26,6 @@ class Form extends React.Component {
         firebase.initializeApp(config);
         this.rootRef = firebase.database().ref('signups')
     }
-
 
     componentDidMount() {
         firebase.auth().onAuthStateChanged(user => {
@@ -60,20 +58,48 @@ class Form extends React.Component {
             this.setState({
                 user: user.email
             })
+            user.sendEmailVerification().then(() => {
+                console.log(`Verification email sent to ${user.email}`);
+            }, err => {
+                console.log(`Verification email failed: ${err}`);
+            })
+        })
+    }
+
+    handleUserDelete(event) {
+        var user = firebase.auth().currentUser
+        var userID = user.uid
+        var credential = 'password'
+        user.delete().then(() => {
+            firebase.database().ref('emails/' + user.uid).remove()
+            console.log(`Deleted user account ${user.email}`);
+            this.setState({
+                user: null,
+                email: ""
+            })
+        }, err => {
+            console.log(err);
+            firebase.auth().signInWithEmailAndPassword(user.email, 'password').catch(e => console.log(e))
+            user.reauthenticate(credential).then(() => {
+                console.log(`user reauthenticated`);
+            }, err => console.log(err))
         })
     }
 
     registrationStatusBox() {
         if (this.state.user) {
-            return <div className="registeredUser">You have already signed up!</div>
+            return <div className="registeredUser">
+                    You have signed up!
+                    <button className='signupButton' onClick={this.handleUserDelete.bind(this)}>Delete Account</button>
+                </div>
         } else {
             return (
                 <div>
-                    <input type="email"
+                    <input className='signupForm' type="email"
                         placeholder="info@bloodpact.io"
                         value={this.state.email}
                         onChange={this.handleChange.bind(this)} />
-                    <button onClick={this.handleSubmit.bind(this)} >Submit</button>
+                    <button className='signupButton' onClick={this.handleSubmit.bind(this)} >Submit</button>
                 </div>
             )
         }
@@ -230,7 +256,7 @@ class App extends React.Component {
         let baserate = 1/1000 // 600 scroll for 1 full rotation
         // start decay 150 scroll into the page
         let decayrate = Math.exp(-(scrollTop-150)/800)
-        let lastRotationValue = (scrollTop * baserate * decayrate).toFixed(2)
+        let lastRotationValue = scrollTop * baserate * decayrate
 
         if (scrollTop <= 650) {
             heart.style.transform = `
@@ -240,7 +266,7 @@ class App extends React.Component {
         }
         if (scrollTop > 650 && scrollTop < window.innerHeight*2) {
             heart.style.transform = `
-            translate(0px, ${(scrollTop/(4 / (1+(scrollTop - 650)/2000))).toFixed(2)}%)
+            translate(0px, ${scrollTop/(4 / (1+(scrollTop - 650)/2000))}%)
                 rotate(${0.65 + lastRotationValue}turn)
             `
         }
@@ -367,8 +393,7 @@ class App extends React.Component {
 
                 <div className="spacer"></div>
                 <h2>Sign up here to help me pitch this idea to the RedCross</h2>
-                <div className="textGrid">
-                    <div className='textBox'>Email</div>
+                <div className="textGridSingle">
                     <div className="textBox"> <Form /> </div>
                 </div>
                 <div className="spacer"></div>
