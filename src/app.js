@@ -1,62 +1,97 @@
 
-import React from 'react';
 
-import './app.sass';
-import './animation.css';
-
-import Waypoint from 'react-waypoint';
-import ReactCSSTransitionGroup from 'react-addons-css-transition-group';
-
+import React from 'react'
+import './app.sass'
+import './animation.css'
+import SVGFloater from './components/svgFloater.js'
+// import { Field, reduxForm } from 'redux-form'
 
 
-class SVGFloater extends React.Component {
+
+
+class Form extends React.Component {
 
     constructor() {
         super();
         this.state = {
-            message: ""
+            email: "",
+            user: ""
+        }
+        var config = {
+            apiKey: "AIzaSyAv8zdHSlHZ9DahyDh7o3baUVMsRHAl4qM",
+            authDomain: "bloodpact-796e0.firebaseapp.com",
+            databaseURL: "https://bloodpact-796e0.firebaseio.com",
+            storageBucket: "bloodpact-796e0.appspot.com",
+            messagingSenderId: "98645258248"
+        };
+        firebase.initializeApp(config);
+        this.rootRef = firebase.database().ref('signups')
+    }
+
+
+    componentDidMount() {
+        firebase.auth().onAuthStateChanged(user => {
+            if (user) {
+                this.setState({
+                    user: user
+                })
+            }
+        })
+    }
+
+    handleChange(event) {
+        this.setState({ email: event.target.value });
+    }
+
+    handleSubmit(event) {
+        // Create a new user
+        firebase.auth().createUserWithEmailAndPassword(this.state.email, "password")
+        .catch(error => {
+            console.log(error)
+        })
+        .then(x => {
+            var user = firebase.auth().currentUser
+            var updates = {}
+            updates['/emails/' + user.uid] = {
+                email: user.email,
+                emailVerified: user.emailVerified
+            }
+            firebase.database().ref().update(updates)
+            this.setState({
+                user: user.email
+            })
+        })
+    }
+
+    registrationStatusBox() {
+        if (this.state.user) {
+            return <div className="registeredUser">You have already signed up!</div>
+        } else {
+            return (
+                <div>
+                    <input type="email"
+                        placeholder="info@bloodpact.io"
+                        value={this.state.email}
+                        onChange={this.handleChange.bind(this)} />
+                    <button onClick={this.handleSubmit.bind(this)} >Submit</button>
+                </div>
+            )
         }
     }
-
-    _renderSVG() {
-        switch (this.state.message) {
-            case "IN":
-                return <img src={this.props.svgSrc} />
-            default:
-                return null
-        }
-    }
-
-    _setMessage(msg) {
-        this.setState({ message: msg });
-        // console.log(this.props.svgSrc + `: Waypoint State: ${this.state.message}`);
-    }
-
 
     render() {
         return (
-            <div className="svgFloater">
-                <Waypoint
-                    onLeave={this._setMessage.bind(this, 'OUT')}
-                    topOffset={-1000}
-                />
-                <Waypoint
-                    onEnter={this._setMessage.bind(this, 'IN')}
-                    bottomOffset={150}
-                />
-                <ReactCSSTransitionGroup
-                    transitionName='svgFloater'
-                    transitionAppear={true}
-                    transitionAppearTimeout={300}
-                    transitionLeaveTimeout={300}
-                    transitionEnterTimeout={300}>
-                    {this._renderSVG()}
-                </ReactCSSTransitionGroup>
+            <div>
+                {this.registrationStatusBox()}
             </div>
         )
     }
 }
 
+
+// const SimpleForm = (props) => {
+//     const { handleSubmit, pristine, reset, submitting }
+// }
 
 
 
@@ -78,15 +113,15 @@ class App extends React.Component {
                 logo1: document.getElementById('logo1'),
                 logo2: document.getElementById('logo2'),
                 logo3: document.getElementById('logo3'),
-
                 dither1: document.getElementById('parallaxDither1'),
                 dither2: document.getElementById('parallaxDither2'),
                 dither3: document.getElementById('parallaxDither3'),
-
+                parallaxBox1: document.getElementById('parallaxBox1'),
+                parallaxBox2: document.getElementById('parallaxBox2'),
+                parallaxBox3: document.getElementById('parallaxBox3'),
                 forewoman: document.getElementById('fore-woman'),
                 foreman1: document.getElementById('fore-man1'),
                 foreman2: document.getElementById('fore-man2'),
-
                 fixedContainer1: document.getElementById('fixedContainer1'),
                 fixedContainer2: document.getElementById('fixedContainer2'),
                 fixedContainer3: document.getElementById('fixedContainer3'),
@@ -96,7 +131,7 @@ class App extends React.Component {
     }
 
     componentWillUnmount() {
-        window.removeEventListener('scroll', this.handleScroll.bind(this));
+        window.removeEventListener('scroll', this.handleScroll);
     }
 
     handleScroll(event) {
@@ -116,9 +151,13 @@ class App extends React.Component {
         let dither1 = elems.dither1
         let dither2 = elems.dither2
         let dither3 = elems.dither3
+        let parallaxBox1 = elems.parallaxBox1
+        let parallaxBox2 = elems.parallaxBox2
+        let parallaxBox3 = elems.parallaxBox3
         let forewoman = elems.forewoman
         let foreman1 = elems.foreman1
         let foreman2 = elems.foreman2
+
         let fixedContainer1 = elems.fixedContainer1
         let fixedContainer2 = elems.fixedContainer2
         let fixedContainer3 = elems.fixedContainer3
@@ -126,34 +165,36 @@ class App extends React.Component {
 
 
         // parallax
-        logo1.style.transform = `translate(0px, ${scrollTop/2}%)`
-        dither1.style.opacity = `${scrollTop/400}`
+        logo1.style.transform = `translate(0px, ${(scrollTop/2).toFixed(2)}%)`
+        dither1.style.opacity = `${(scrollTop/400).toFixed(2)}`
 
         if ( scrollTop >= window.innerHeight ) {
             let scale2 = scrollTop - window.innerHeight
-            logo2.style.transform = `translate(0px, ${scale2/2}%)`
+            logo2.style.transform = `translate(0px, ${(scale2/2).toFixed(2)}%)`
             dither2.style.opacity = `${scale2/400}`
         } else {
             dither2.style.opacity = `0`
         }
 
         if ( scrollTop >= (window.innerHeight + 100)*2 ) {
-            let scale3 = scrollTop - (window.innerHeight + 100) * 2
-            logo3.style.transform = `translate(0px, ${scale3/2}%)`
+            let scale3 = (scrollTop - (window.innerHeight + 100) * 2).toFixed(2)
+            logo3.style.transform = `translate(0px, ${(scale3/2).toFixed(2)}%)`
             dither3.style.opacity = `${scale3/400}`
         } else {
             dither3.style.opacity = `0`
         }
 
+        // parallaxBox2.style.backgroundPosition = `${scrollTop/300 + 50}% 50%`
+        // parallaxBox3.style.backgroundPosition = `${50 - scrollTop/300}% 50%`
+        // parallaxBox2.style.backgroundPosition = '50% 50%'
+        // parallaxBox3.style.backgroundPosition = '50% 50%'
 
         // people sliders
         if (scrollTop < window.innerHeight) {
-            forewoman.style.transform = `translate(${scrollTop/4}%, 0px)`
-            foreman1.style.transform = `translate(${scrollTop/(3*(1 + (5-scrollTop)/1200))}%, 0px)`
-            foreman2.style.transform = `translate(${scrollTop/(2*(1 + (5-scrollTop)/1000))}%, 0px)`
+            forewoman.style.transform = `translate(${(scrollTop/4).toFixed(2)}%, 0px)`
+            foreman1.style.transform = `translate(${(scrollTop/(3*(1 + (5-scrollTop)/1200))).toFixed(2)}%, 0px)`
+            foreman2.style.transform = `translate(${(scrollTop/(2*(1 + (5-scrollTop)/1000))).toFixed(2)}%, 0px)`
         }
-
-
 
         //// THRESHOLDS FOR Fixed containers/placeholders
         // Must be here, otherwise breaks on window resize
@@ -189,7 +230,7 @@ class App extends React.Component {
         let baserate = 1/1000 // 600 scroll for 1 full rotation
         // start decay 150 scroll into the page
         let decayrate = Math.exp(-(scrollTop-150)/800)
-        let lastRotationValue = scrollTop * baserate * decayrate
+        let lastRotationValue = (scrollTop * baserate * decayrate).toFixed(2)
 
         if (scrollTop <= 650) {
             heart.style.transform = `
@@ -199,7 +240,7 @@ class App extends React.Component {
         }
         if (scrollTop > 650 && scrollTop < window.innerHeight*2) {
             heart.style.transform = `
-            translate(0px, ${scrollTop/(4 / (1+(scrollTop - 650)/2000))}%)
+            translate(0px, ${(scrollTop/(4 / (1+(scrollTop - 650)/2000))).toFixed(2)}%)
                 rotate(${0.65 + lastRotationValue}turn)
             `
         }
@@ -238,7 +279,7 @@ class App extends React.Component {
 
                 {this._placeholder(window.innerHeight, 1)}
                 <div id='fixedContainer1' className='container'>
-                    <SVGFloater svgSrc={require('./img/blooddrop2.svg')} />
+                    <img id="" src={require("./img/blooddrop2.svg")} />
                     <div className="textBox">
                         1) Increase aggregate levels of blood donation
                         (can't just pay for blood since that's immoral and can
@@ -257,9 +298,9 @@ class App extends React.Component {
 
                 {this._placeholder(window.innerHeight, 2)}
                 <div id='fixedContainer2' className='container'>
-                    <SVGFloater svgSrc={require("./img/perfusion.svg")} />
+                    <img src={require("./img/perfusion.svg")} />
                     <div className="textBox">
-                        2) Solves the "adverse selection problem" in health insurance:
+                        2) Solves incentive issues in health insurance:
                         people conceal information about their health status and their habits
                         (smoking, diet) to obtain cheaper premiums.
                     </div>
@@ -276,7 +317,7 @@ class App extends React.Component {
 
                 {this._placeholder(window.innerHeight, 3)}
                 <div id='fixedContainer3' className='container'>
-                    <SVGFloater svgSrc={require("./img/finger.svg")} />
+                    <img src={require("./img/bloodtest.svg")} />
                     <div className="textBox">
                         3) By donating blood we can do blood tests and screen doners for
                         viable “blood-pact” candidates. This reveals better information about
@@ -284,33 +325,57 @@ class App extends React.Component {
                     </div>
                 </div>
 
-                <div className="spacer">a</div>
 
-                <div className='container'>
-                    <SVGFloater svgSrc={require("./img/bloodpack.svg")} />
+                <div className="spacer"></div>
+
+                <h2>Blood has a shelf life of 5 weeks</h2>
+                <div className='textGrid'>
+                    <div className="svgFloater">
+                        <img src={require("./img/healthpack.svg")} />
+                    </div>
                     <div className="textBox">
-                        Also, blood stocks are not just low, they are unpredictably low.
+                        This means that blood supply is unpredictably low at times.
                         People give blood at random times throughout their lives.
-                        Bloodpact bascially provides a reliable and predictable stream of blood donations,
+                    </div>
+                    <div className="svgFloater">
+                        <img src={require("./img/transfusion2.svg")} />
+                    </div>
+                    <div className="textBox">
+                        Bloodpact provides a reliable and predictable stream of blood donations,
                         so that hospitals will be better at planning and allocating blood over seasons.
                     </div>
                 </div>
 
-                <div className="spacer">a</div>
-
-                <div className='container'>
-                    <SVGFloater svgSrc={require("./img/transfusion2.svg")} />
+                <div className="spacer"></div>
+                <div className='textGrid'>
+                    <div className="svgFloater">
+                        <img src={require("./img/transfusion3.svg")} />
+                    </div>
                     <div className="textBox">
-                        Blood Pact devotees will be assigned different days/months throughout
-                        the year to obtain even spread in aggregate blood donations.
-                        No waste, no over or undersupply across time. Predictable blood donations.
+                        Bloodpact donors  will be assigned different dates to
+                        spread blood supply evenly throughout the year.
+                    </div>
+                    <div className="svgFloater">
+                        <img src={require("./img/finger.svg")} />
+                    </div>
+                    <div className="textBox">
+                        No waste, no over or undersupply across time.
+                        Predictable blood donations.
                     </div>
                 </div>
 
-                <div className="spacer">a</div>
-                <div className="spacer">a</div>
-                <div className="spacer">a</div>
-                <div className="spacer">a</div>
+
+                <div className="spacer"></div>
+                <h2>Sign up here to help me pitch this idea to the RedCross</h2>
+                <div className="textGrid">
+                    <div className='textBox'>Email</div>
+                    <div className="textBox"> <Form /> </div>
+                </div>
+                <div className="spacer"></div>
+                <div className="spacer"></div>
+                <div className="spacer"></div>
+                <div className="spacer"></div>
+                <div className="spacer"></div>
             </div>
         );
     }
