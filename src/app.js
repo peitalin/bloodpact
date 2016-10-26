@@ -342,8 +342,8 @@ class App extends React.Component {
 
 
                 <div className='container'>
-                    <div className="textBox">
                     <img src={require("./img/perfusion.svg")} />
+                    <div className="textBox">
                         2) Solves incentive issues in health insurance:
                         people conceal information about their health status and their habits
                         (smoking, diet) to obtain cheaper premiums.
