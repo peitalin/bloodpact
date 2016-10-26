@@ -90,7 +90,6 @@ class Form extends React.Component {
         if (this.state.user) {
             return <div className="registeredUser">
                     You have signed up!
-                    <button className='signupButton' onClick={this.handleUserDelete.bind(this)}>Delete Account</button>
                 </div>
         } else {
             return (
@@ -127,12 +126,33 @@ class App extends React.Component {
         super();
         this.state = {
             scrollTop: 0,
-            elems: {}
+            threshold1: 0,
+            threshold2: 0,
+            threshold3: 0,
+            threshold4: 0,
+            threshold5: 0,
+            elems: {},
         }
+    }
+
+    handleResize() {
+        // THRESHOLDS FOR Fixed containers/placeholders
+        // window-height * n plus (n-1)*100px for the placeholder
+        const getWindowThreshold = (n) => window.innerHeight*n + (n-1)*100
+        this.setState({
+            threshold1: getWindowThreshold(1),
+            threshold2: getWindowThreshold(2),
+            threshold3: getWindowThreshold(3),
+            threshold4: getWindowThreshold(4),
+            threshold5: getWindowThreshold(5),
+        })
+
     }
 
     componentDidMount() {
         window.addEventListener('scroll', this.handleScroll.bind(this));
+        window.addEventListener('onresize', this.handleResize.bind(this))
+        this.handleResize()
 
         this.setState({
             elems: {
@@ -158,7 +178,9 @@ class App extends React.Component {
 
     componentWillUnmount() {
         window.removeEventListener('scroll', this.handleScroll);
+        window.removeEventListener('onresize', this.handleResize);
     }
+
 
     handleScroll(event) {
 
@@ -166,44 +188,57 @@ class App extends React.Component {
             scrollTop: event.srcElement.body.scrollTop
         })
         let scrollTop = this.state.scrollTop
-        let elems = this.state.elems
         // console.log(`Scrolling: ${this.state.scrollTop}`);
 
         // move document.getElementById('') to componentDidMount for performance
         // so that it won't lookup elemens every time there is a scroll event
-        let logo1 = elems.logo1
-        let logo2 = elems.logo2
-        let logo3 = elems.logo3
-        let dither1 = elems.dither1
-        let dither2 = elems.dither2
-        let dither3 = elems.dither3
-        let parallaxBox1 = elems.parallaxBox1
-        let parallaxBox2 = elems.parallaxBox2
-        let parallaxBox3 = elems.parallaxBox3
-        let forewoman = elems.forewoman
-        let foreman1 = elems.foreman1
-        let foreman2 = elems.foreman2
+        let logo1 = this.state.elems.logo1
+        let logo2 = this.state.elems.logo2
+        let logo3 = this.state.elems.logo3
+        let dither1 = this.state.elems.dither1
+        let dither2 = this.state.elems.dither2
+        let dither3 = this.state.elems.dither3
+        let parallaxBox1 = this.state.elems.parallaxBox1
+        let parallaxBox2 = this.state.elems.parallaxBox2
+        let parallaxBox3 = this.state.elems.parallaxBox3
+        let forewoman = this.state.elems.forewoman
+        let foreman1 = this.state.elems.foreman1
+        let foreman2 = this.state.elems.foreman2
 
-        let fixedContainer1 = elems.fixedContainer1
-        let fixedContainer2 = elems.fixedContainer2
-        let fixedContainer3 = elems.fixedContainer3
+        let threshold1 = this.state.threshold1
+        let threshold2 = this.state.threshold2
+        let threshold3 = this.state.threshold3
+        let threshold4 = this.state.threshold4
+        let threshold5 = this.state.threshold5
+
+        let fixedContainer1 = this.state.elems.fixedContainer1
+        let fixedContainer2 = this.state.elems.fixedContainer2
+        let fixedContainer3 = this.state.elems.fixedContainer3
 
 
 
-        // parallax
-        logo1.style.transform = `translate(0px, ${(scrollTop/2).toFixed(2)}%)`
-        dither1.style.opacity = `${(scrollTop/400).toFixed(2)}`
+        // parallax window 1
+        if ( scrollTop <= threshold1) {
+            logo1.style.transform = `translate(0px, ${(scrollTop/2).toFixed(2)}%)`
+            dither1.style.opacity = `${(scrollTop/400).toFixed(2)}`
+            // people sliders
+            forewoman.style.transform = `translate(${(scrollTop/4).toFixed(2)}%, 0px)`
+            foreman1.style.transform = `translate(${(scrollTop/(3*(1 - scrollTop/1200))).toFixed(2)}%, 0px)`
+            foreman2.style.transform = `translate(${(scrollTop/(2*(1 - scrollTop/1000))).toFixed(2)}%, 0px)`
+        }
 
-        if ( scrollTop >= window.innerHeight ) {
-            let scale2 = scrollTop - window.innerHeight
+        // parallax window 2
+        if ( threshold1 <= scrollTop && scrollTop <= threshold2 ) {
+            let scale2 = scrollTop - threshold1
             logo2.style.transform = `translate(0px, ${(scale2/2).toFixed(2)}%)`
             dither2.style.opacity = `${scale2/400}`
         } else {
             dither2.style.opacity = `0`
         }
 
-        if ( scrollTop >= (window.innerHeight + 100)*2 ) {
-            let scale3 = (scrollTop - (window.innerHeight + 100) * 2).toFixed(2)
+        // parallax window 3
+        if ( threshold2 <= scrollTop && scrollTop <= threshold3 ) {
+            let scale3 = (scrollTop - threshold2).toFixed(2)
             logo3.style.transform = `translate(0px, ${(scale3/2).toFixed(2)}%)`
             dither3.style.opacity = `${scale3/400}`
         } else {
@@ -215,36 +250,23 @@ class App extends React.Component {
         // parallaxBox2.style.backgroundPosition = '50% 50%'
         // parallaxBox3.style.backgroundPosition = '50% 50%'
 
-        // people sliders
-        if (scrollTop < window.innerHeight) {
-            forewoman.style.transform = `translate(${(scrollTop/4).toFixed(2)}%, 0px)`
-            foreman1.style.transform = `translate(${(scrollTop/(3*(1 + (5-scrollTop)/1200))).toFixed(2)}%, 0px)`
-            foreman2.style.transform = `translate(${(scrollTop/(2*(1 + (5-scrollTop)/1000))).toFixed(2)}%, 0px)`
-        }
 
-        //// THRESHOLDS FOR Fixed containers/placeholders
-        // Must be here, otherwise breaks on window resize
-        // window-height * 2 plus 100px for the placeholder
-        let threshold1 = window.innerHeight*2 + 100
-        // window height * 3 plus 200px for the 2 placeholders
-        let threshold2 = window.innerHeight*3 + 2*100
-        // window height * 4 plus 300px for the 3 placeholders
-        let threshold3 = window.innerHeight*4 + 3*100
 
         // 1st fixed container
-        if (window.innerHeight <= scrollTop && scrollTop <= threshold1) {
+        if (threshold1 <= scrollTop && scrollTop <= threshold2) {
             fixedContainer1.style.position = 'fixed'
         } else {
             fixedContainer1.style.position = 'relative'
         }
+
         // 2nd fixed container
-        if (threshold1 <= scrollTop && scrollTop <= threshold2) {
+        if (threshold2 <= scrollTop && scrollTop <= threshold3) {
             fixedContainer2.style.position = 'fixed'
         } else {
             fixedContainer2.style.position = 'relative'
         }
         // 3rd fixed container
-        if (threshold2 <= scrollTop && scrollTop <= threshold3) {
+        if (threshold3 <= scrollTop && scrollTop <= threshold4) {
             fixedContainer3.style.position = 'fixed'
         } else {
             fixedContainer3.style.position = 'relative'
@@ -253,32 +275,33 @@ class App extends React.Component {
 
         // Heart animation
         let heart = document.getElementById('heart-beat')
-        let baserate = 1/1000 // 600 scroll for 1 full rotation
         // start decay 150 scroll into the page
-        let decayrate = Math.exp(-(scrollTop-150)/800)
-        let lastRotationValue = scrollTop * baserate * decayrate
+        let decayrate = Math.exp(-scrollTop/800)
+        let lastRotationValue = scrollTop / 1000 * decayrate
 
         if (scrollTop <= 650) {
             heart.style.transform = `
                 translate(0px, ${scrollTop/4}%)
-                rotate(${0.65 + lastRotationValue}turn)
+                rotate(${0.7 + lastRotationValue}turn)
             `
         }
-        if (scrollTop > 650 && scrollTop < window.innerHeight*2) {
+        if (650 < scrollTop && scrollTop < threshold2) {
             heart.style.transform = `
             translate(0px, ${scrollTop/(4 / (1+(scrollTop - 650)/2000))}%)
-                rotate(${0.65 + lastRotationValue}turn)
+                rotate(${0.7 + lastRotationValue}turn)
             `
         }
 
 
     }
 
-    _placeholder(threshold, n) {
-        let scrollTop = this.state.scrollTop
-        let lowerThreshold = threshold*n + (n-1)*100
 
-        if (lowerThreshold <= scrollTop && scrollTop <= threshold*(n+1) + n*100) {
+
+    _placeholder(lowerThreshold, upperThreshold) {
+        // inserts a placeholder for the 'fixed' (floating) banner when
+        // viewport is between lower and upper thresholds
+        let scrollTop = this.state.scrollTop
+        if (lowerThreshold <= scrollTop && scrollTop <=  upperThreshold) {
             return <div id='tempPlaceholder' className='container'>
                     <div className="textBox">placeholder</div>
                 </div>
@@ -303,7 +326,7 @@ class App extends React.Component {
                 </div>
 
 
-                {this._placeholder(window.innerHeight, 1)}
+                {this._placeholder(this.state.threshold1, this.state.threshold2)}
                 <div id='fixedContainer1' className='container'>
                     <img id="" src={require("./img/blooddrop2.svg")} />
                     <div className="textBox">
@@ -322,9 +345,9 @@ class App extends React.Component {
                 </div>
 
 
-                {this._placeholder(window.innerHeight, 2)}
+                {this._placeholder(this.state.threshold2, this.state.threshold3)}
                 <div id='fixedContainer2' className='container'>
-                    <img src={require("./img/perfusion.svg")} />
+                    <img src={require("./img/blooddrop2.svg")} />
                     <div className="textBox">
                         2) Solves incentive issues in health insurance:
                         people conceal information about their health status and their habits
@@ -341,9 +364,9 @@ class App extends React.Component {
                 </div>
 
 
-                {this._placeholder(window.innerHeight, 3)}
+                {this._placeholder(this.state.threshold3, this.state.threshold4)}
                 <div id='fixedContainer3' className='container'>
-                    <img src={require("./img/bloodtest.svg")} />
+                    <img src={require("./img/blooddrop2.svg")} />
                     <div className="textBox">
                         3) By donating blood we can do blood tests and screen doners for
                         viable “blood-pact” candidates. This reveals better information about
