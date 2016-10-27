@@ -14,7 +14,8 @@ class Form extends React.Component {
         super();
         this.state = {
             email: "",
-            user: ""
+            user: "",
+            signInStatus: "",
         }
         var config = {
             apiKey: "AIzaSyAv8zdHSlHZ9DahyDh7o3baUVMsRHAl4qM",
@@ -31,7 +32,8 @@ class Form extends React.Component {
         firebase.auth().onAuthStateChanged(user => {
             if (user) {
                 this.setState({
-                    user: user
+                    user: user,
+                    signInStatus: "You have registered",
                 })
             }
         })
@@ -42,27 +44,38 @@ class Form extends React.Component {
     }
 
     handleSubmit(event) {
+
         // Create a new user
-        firebase.auth().createUserWithEmailAndPassword(this.state.email, "password")
+        firebase.auth().createUserWithEmailAndPassword(this.state.email, 'password')
         .catch(error => {
             console.log(error)
+            // User already exists in firebase, so attempt login
+            firebase.auth().signInWithEmailAndPassword(this.state.email, 'password').catch(e => { console.log(e) })
+            var user = firebase.auth().currentUser
+            this.setState({
+                user: this.state.email,
+                signInStatus: "You have already registered",
+            })
         })
         .then(x => {
+            if (this.state.signInStatus === "You have already registered") {
+                // return if user already exists
+                return;
+            }
             var user = firebase.auth().currentUser
             var updates = {}
             updates['/emails/' + user.uid] = {
                 email: user.email,
-                emailVerified: user.emailVerified
+                emailVerified: user.emailVerified,
             }
             firebase.database().ref().update(updates)
             this.setState({
-                user: user.email
+                user: user.email,
+                signInStatus: "You are now registered",
             })
             user.sendEmailVerification().then(() => {
                 console.log(`Verification email sent to ${user.email}`);
-            }, err => {
-                console.log(`Verification email failed: ${err}`);
-            })
+            }, err => { console.log(`Verification email failed: ${err}`); })
         })
     }
 
@@ -75,7 +88,8 @@ class Form extends React.Component {
             console.log(`Deleted user account ${user.email}`);
             this.setState({
                 user: null,
-                email: ""
+                email: "",
+                signInStatus: "You have signed out"
             })
         }, err => {
             console.log(err);
@@ -86,19 +100,43 @@ class Form extends React.Component {
         })
     }
 
+    handleSignout() {
+        firebase.auth().signOut().then(() => {
+            var temp = this.state.email
+            this.setState({
+                user: "",
+                email: "",
+                signInStatus: "You have signed out"
+            })
+            console.log(`You have signed out`);
+        }, error => { console.log(error) })
+    }
+
     registrationStatusBox() {
         if (this.state.user) {
-            return <div className="registeredUser">
-                    You have signed up!
+            return <div>
+                    <div className='signInStatus'>
+                        {this.state.signInStatus}<br/>
+                    </div>
+                    <div className='signInStatus'>
+                        <button className='signoutButton' onClick={this.handleSignout.bind(this)}>
+                            Signout
+                        </button>
+                    </div>
                 </div>
         } else {
             return (
                 <div>
-                    <input className='signupForm' type="email"
-                        placeholder="info@bloodpact.io"
-                        value={this.state.email}
-                        onChange={this.handleChange.bind(this)} />
-                    <button className='signupButton' onClick={this.handleSubmit.bind(this)} >Submit</button>
+                    <div className="signInStatus">
+                        <input className='signupForm' type="email"
+                            placeholder="info@bloodpact.io"
+                            value={this.state.email}
+                            onChange={this.handleChange.bind(this)} />
+                        <button className='signupButton' onClick={this.handleSubmit.bind(this)} >Submit</button>
+                    </div>
+                    <div className="signInStatus">
+                        {this.state.signInStatus}
+                    </div>
                 </div>
             )
         }
@@ -153,7 +191,7 @@ class App extends React.Component {
     componentDidMount() {
         window.addEventListener('scroll', this.handleScroll.bind(this));
         window.addEventListener('onresize', this.handleResize.bind(this))
-        this.handleResize()
+        // this.handleResize()
 
         this.setState({
             elems: {
@@ -178,7 +216,11 @@ class App extends React.Component {
     }
 
     componentWillUnmount() {
-        window.removeEventListener('scroll', this.handleScroll);
+        window.removeEventListener(
+            'scroll',
+            window.requestAnimationFrame(this.handleScroll),
+            { passive: true }
+        );
         window.removeEventListener('onresize', this.handleResize);
     }
 
@@ -188,7 +230,7 @@ class App extends React.Component {
         this.setState({
             scrollTop: event.srcElement.body.scrollTop
         })
-        this.handleResize()
+        setInterval(this.handleResize(), 400)
         let scrollTop = this.state.scrollTop
         // console.log(`Scrolling: ${this.state.scrollTop}`);
 
@@ -251,28 +293,6 @@ class App extends React.Component {
         // parallaxBox3.style.backgroundPosition = `${50 - scrollTop/300}% 50%`
         // parallaxBox2.style.backgroundPosition = '50% 50%'
         // parallaxBox3.style.backgroundPosition = '50% 50%'
-
-
-
-        // 1st fixed container
-        if (threshold1 <= scrollTop && scrollTop <= threshold2) {
-            fixedContainer1.style.visibility = 'visible'
-        } else {
-            fixedContainer1.style.visibility = 'hidden'
-        }
-
-        // 2nd fixed container
-        if (threshold2 <= scrollTop && scrollTop <= threshold3) {
-            fixedContainer2.style.visibility = 'visible'
-        } else {
-            fixedContainer2.style.visibility = 'hidden'
-        }
-        // 3rd fixed container
-        if (threshold3 <= scrollTop && scrollTop <= threshold4) {
-            fixedContainer3.style.visibility = 'visible'
-        } else {
-            fixedContainer3.style.visibility = 'hidden'
-        }
 
 
         // Heart animation
