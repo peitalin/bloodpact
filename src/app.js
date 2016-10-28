@@ -171,25 +171,31 @@ class App extends React.Component {
             threshold4: 0,
             threshold5: 0,
             bannerHeight: 0,
+            windowHeight: 0,
             elems: {},
         }
     }
 
     handleResize() {
-        // THRESHOLDS FOR Fixed containers/placeholders
-        // window-height * n plus (n-1)*100px for the placeholder
-        this.setState({
-            bannerHeight: document.getElementById('fixedContainer1').clientHeight
-        })
-        const getWindowThreshold = (n) => window.innerHeight*n + (n-1)*this.state.bannerHeight
-        this.setState({
-            threshold1: getWindowThreshold(1),
-            threshold2: getWindowThreshold(2),
-            threshold3: getWindowThreshold(3),
-            threshold4: getWindowThreshold(4),
-            threshold5: getWindowThreshold(5),
-        })
-
+        if (this.state.windowHeight == window.innerHeight) {
+            return;
+        } else {
+            console.log('windowHeight changed!');
+            this.setState({
+                windowHeight: window.innerHeight,
+                bannerHeight: document.getElementById('fixedContainer1').clientHeight
+            })
+            // THRESHOLDS FOR Fixed containers/placeholders
+            // window-height * n plus (n-1)*100px for the placeholder
+            const getWindowThreshold = (n) => window.innerHeight*n + (n-1)*this.state.bannerHeight
+            this.setState({
+                threshold1: getWindowThreshold(1),
+                threshold2: getWindowThreshold(2),
+                threshold3: getWindowThreshold(3),
+                threshold4: getWindowThreshold(4),
+                threshold5: getWindowThreshold(5),
+            })
+        }
     }
 
     componentDidMount() {
@@ -236,7 +242,7 @@ class App extends React.Component {
         this.setState({
             scrollTop: event.srcElement.body.scrollTop
         })
-        // this.handleResize()
+        this.handleResize()
         let scrollTop = this.state.scrollTop
         // console.log(`Scrolling: ${this.state.scrollTop}`);
 
@@ -267,10 +273,6 @@ class App extends React.Component {
         let threshold4 = this.state.threshold4
         let threshold5 = this.state.threshold5
 
-        let fixedContainer1 = this.state.elems.fixedContainer1
-        let fixedContainer2 = this.state.elems.fixedContainer2
-        let fixedContainer3 = this.state.elems.fixedContainer3
-        let bannerHeight = this.state.elems.bannerHeight
 
 
         // Wrap Parallax Windows in requestAnimationFrame for performance
@@ -313,28 +315,34 @@ class App extends React.Component {
             }
         })
 
-
-        // 1st fixed container
-        if (threshold1 <= scrollTop && scrollTop <= threshold2) {
-            fixedContainer1.style.position = 'fixed'
-        } else {
-            fixedContainer1.style.position = 'relative'
-        }
-        // 2nd fixed container
-        if (threshold2 <= scrollTop && scrollTop <= threshold3) {
-            fixedContainer2.style.position = 'fixed'
-        } else {
-            fixedContainer2.style.position = 'relative'
-        }
-        // 3rd fixed container
-        // if (threshold3 <= scrollTop && scrollTop <= (threshold4)) {
-        //     fixedContainer3.style.position = 'fixed'
-        // } else {
-        //     fixedContainer3.style.position = 'relative'
-        // }
-
+        this.toggleFixedContainer()
         this.animateHeart()
 
+    }
+
+    toggleFixedContainer() {
+        let scrollTop = this.state.scrollTop
+        let fixedContainer1 = this.state.elems.fixedContainer1
+        let fixedContainer2 = this.state.elems.fixedContainer2
+        let fixedContainer3 = this.state.elems.fixedContainer3
+        let threshold1 = this.state.threshold1
+        let threshold2 = this.state.threshold2
+        let threshold3 = this.state.threshold3
+
+        window.requestAnimationFrame(() => {
+            // 1st fixed container
+            if (threshold1 <= scrollTop && scrollTop <= threshold2) {
+                fixedContainer1.style.position = 'fixed'
+            } else {
+                fixedContainer1.style.position = 'relative'
+            }
+            // 2nd fixed container
+            if (threshold2 <= scrollTop && scrollTop <= threshold3) {
+                fixedContainer2.style.position = 'fixed'
+            } else {
+                fixedContainer2.style.position = 'relative'
+            }
+        })
     }
 
 
