@@ -134,7 +134,9 @@ class Form extends React.Component {
                             placeholder="info@bloodpact.io"
                             value={this.state.email}
                             onChange={this.handleChange.bind(this)} />
-                        <button className='signupButton' onClick={this.handleSubmit.bind(this)} >Submit</button>
+                        <button className='signupButton' onClick={this.handleSubmit.bind(this)} >
+                            Submit
+                        </button>
                     </div>
                     <div className="signInStatus">
                         {this.state.signInStatus}
@@ -154,9 +156,6 @@ class Form extends React.Component {
 }
 
 
-// const SimpleForm = (props) => {
-//     const { handleSubmit, pristine, reset, submitting }
-// }
 
 
 
@@ -200,7 +199,6 @@ class App extends React.Component {
         );
 
         window.addEventListener('onresize', this.handleResize.bind(this))
-        // this.handleResize()
 
         this.setState({
             elems: {
@@ -233,15 +231,12 @@ class App extends React.Component {
     }
 
 
-
-
     handleScroll(event) {
-
 
         this.setState({
             scrollTop: event.srcElement.body.scrollTop
         })
-        this.handleResize()
+        // this.handleResize()
         let scrollTop = this.state.scrollTop
         // console.log(`Scrolling: ${this.state.scrollTop}`);
 
@@ -278,43 +273,45 @@ class App extends React.Component {
         let bannerHeight = this.state.elems.bannerHeight
 
 
+        // Wrap Parallax Windows in requestAnimationFrame for performance
+        window.requestAnimationFrame(() => {
+            // parallax window 1
+            if ( scrollTop <= threshold1) {
+                logo1.style.transform = `translate3d(0px, ${(scrollTop/2).toFixed(2)}%, 0)`
+                dither1.style.opacity = `${(scrollTop/400).toFixed(2)}`
+                // people sliders
+                forewoman.style.transform = `translate3d(${(scrollTop/6).toFixed(2)}%, 0, 0)`
+                foreman1.style.transform = `translate3d(${(scrollTop/(5*(1 - scrollTop/2000))).toFixed(2)}%, 0, 0)`
+                foreman2.style.transform = `translate3d(${(scrollTop/(4*(1 - scrollTop/1500))).toFixed(2)}%, 0, 0)`
+            }
 
-        // parallax window 1
-        if ( scrollTop <= threshold1) {
-            logo1.style.transform = `translate3d(0px, ${(scrollTop/2).toFixed(2)}%, 0)`
-            dither1.style.opacity = `${(scrollTop/400).toFixed(2)}`
-            // people sliders
-            forewoman.style.transform = `translate3d(${(scrollTop/6).toFixed(2)}%, 0, 0)`
-            foreman1.style.transform = `translate3d(${(scrollTop/(5*(1 - scrollTop/2000))).toFixed(2)}%, 0, 0)`
-            foreman2.style.transform = `translate3d(${(scrollTop/(4*(1 - scrollTop/1500))).toFixed(2)}%, 0, 0)`
-        }
+            // parallax window 2
+            if ( threshold1 <= scrollTop && scrollTop <= threshold2 ) {
+                let scale2 = scrollTop - threshold1
+                logo2.style.transform = `translate3d(0px, ${(scale2/2).toFixed(2)}%, 0px)`
+                dither2.style.opacity = `${scale2/400}`
+            } else {
+                dither2.style.opacity = `0`
+            }
 
-        // parallax window 2
-        if ( threshold1 <= scrollTop && scrollTop <= threshold2 ) {
-            let scale2 = scrollTop - threshold1
-            logo2.style.transform = `translate3d(0px, ${(scale2/2).toFixed(2)}%, 0px)`
-            dither2.style.opacity = `${scale2/400}`
-        } else {
-            dither2.style.opacity = `0`
-        }
+            // parallax window 3
+            if ( threshold2 <= scrollTop && scrollTop <= threshold3 ) {
+                let scale3 = (scrollTop - threshold2).toFixed(2)
+                logo3.style.transform = `translate3d(0px, ${(scale3/2).toFixed(2)}%, 0px)`
+                dither3.style.opacity = `${scale3/400}`
+            } else {
+                dither3.style.opacity = `0`
+            }
 
-        // parallax window 3
-        if ( threshold2 <= scrollTop && scrollTop <= threshold3 ) {
-            let scale3 = (scrollTop - threshold2).toFixed(2)
-            logo3.style.transform = `translate3d(0px, ${(scale3/2).toFixed(2)}%, 0px)`
-            dither3.style.opacity = `${scale3/400}`
-        } else {
-            dither3.style.opacity = `0`
-        }
-
-        // parallax window 4
-        if ( threshold3 <= scrollTop && scrollTop <= threshold5 ) {
-            let scale4 = (scrollTop - threshold3).toFixed(2)
-            logo4.style.transform = `translate3d(0px, ${(scale4/2).toFixed(2)}%, 0px)`
-            dither4.style.opacity = `${scale4/400}`
-        } else {
-            dither4.style.opacity = `0`
-        }
+            // parallax window 4
+            if ( threshold3 <= scrollTop && scrollTop <= threshold5 ) {
+                let scale4 = (scrollTop - threshold3).toFixed(2)
+                logo4.style.transform = `translate3d(0px, ${(scale4/2).toFixed(2)}%, 0px)`
+                dither4.style.opacity = `${scale4/400}`
+            } else {
+                dither4.style.opacity = `0`
+            }
+        })
 
 
         // 1st fixed container
@@ -323,7 +320,6 @@ class App extends React.Component {
         } else {
             fixedContainer1.style.position = 'relative'
         }
-
         // 2nd fixed container
         if (threshold2 <= scrollTop && scrollTop <= threshold3) {
             fixedContainer2.style.position = 'fixed'
@@ -337,30 +333,36 @@ class App extends React.Component {
         //     fixedContainer3.style.position = 'relative'
         // }
 
+        this.animateHeart()
 
+    }
+
+
+    animateHeart() {
         // Heart animation
+        let scrollTop = this.state.scrollTop
         let heart = document.getElementById('heart-beat')
         let lastRotationValue = scrollTop / 1000 * Math.exp(-scrollTop/800)
         let transRate = scrollTop/4
         let transRate2 = scrollTop/ (4 / (1+(scrollTop - 650)/2000))
 
         if (scrollTop <= 650) {
-            heart.style.transform = `
-                translate3d(0, ${transRate}%, 0)
-                rotate(${0.7 + lastRotationValue}turn)
-            `
+            window.requestAnimationFrame(() => {
+                heart.style.transform = `
+                    translate3d(0, ${transRate}%, 0)
+                    rotate(${0.7 + lastRotationValue}turn)
+                `
+            })
         }
-        if (650 < scrollTop && scrollTop < threshold2) {
-            heart.style.transform = `
-                translate3d(0, ${transRate2}%, 0)
-                rotate(${0.7 + lastRotationValue}turn)
-            `
+        if (650 < scrollTop && scrollTop < this.state.threshold2) {
+            window.requestAnimationFrame(() => {
+                heart.style.transform = `
+                    translate3d(0, ${transRate2}%, 0)
+                    rotate(${0.7 + lastRotationValue}turn)
+                `
+            })
         }
-
-
     }
-
-
 
     render() {
         return (
@@ -413,11 +415,8 @@ class App extends React.Component {
                 </div>
 
 
-
                 <Parallax id="4" title="Enter the blood-pact challenge and fight blood-bourne disease">
                 </Parallax>
-
-
 
 
                 <h2>Blood has a shelf life of 5 weeks</h2>
