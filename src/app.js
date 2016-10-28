@@ -274,46 +274,57 @@ class App extends React.Component {
         let threshold5 = this.state.threshold5
 
 
-
         // Wrap Parallax Windows in requestAnimationFrame for performance
-        window.requestAnimationFrame(() => {
-            // parallax window 1
-            if ( scrollTop <= threshold1) {
+        // parallax window 1
+        if ( scrollTop <= threshold1) {
+            window.requestAnimationFrame(() => {
                 logo1.style.transform = `translate3d(0px, ${(scrollTop/2).toFixed(2)}%, 0)`
                 dither1.style.opacity = `${(scrollTop/400).toFixed(2)}`
                 // people sliders
-                forewoman.style.transform = `translate3d(${(scrollTop/6).toFixed(2)}%, 0, 0)`
-                foreman1.style.transform = `translate3d(${(scrollTop/(5*(1 - scrollTop/2000))).toFixed(2)}%, 0, 0)`
-                foreman2.style.transform = `translate3d(${(scrollTop/(4*(1 - scrollTop/1500))).toFixed(2)}%, 0, 0)`
-            }
+                forewoman.style.transform = `translate3d(${(scrollTop/6).toFixed(2)}%, 0px, 0px)`
+                foreman1.style.transform = `translate3d(${(scrollTop/(5*(1 - scrollTop/2000))).toFixed(2)}%, 0px, 0px)`
+                foreman2.style.transform = `translate3d(${(scrollTop/(4*(1 - scrollTop/1500))).toFixed(2)}%, 0px, 0px)`
+            })
+        }
 
             // parallax window 2
-            if ( threshold1 <= scrollTop && scrollTop <= threshold2 ) {
+        if ( threshold1 <= scrollTop && scrollTop <= threshold2 ) {
+            window.requestAnimationFrame(() => {
                 let scale2 = scrollTop - threshold1
                 logo2.style.transform = `translate3d(0px, ${(scale2/2).toFixed(2)}%, 0px)`
                 dither2.style.opacity = `${scale2/400}`
-            } else {
+            })
+        } else {
+            window.requestAnimationFrame(() => {
                 dither2.style.opacity = `0`
-            }
+            })
+        }
 
             // parallax window 3
-            if ( threshold2 <= scrollTop && scrollTop <= threshold3 ) {
+        if ( threshold2 <= scrollTop && scrollTop <= threshold3 ) {
+            window.requestAnimationFrame(() => {
                 let scale3 = (scrollTop - threshold2).toFixed(2)
                 logo3.style.transform = `translate3d(0px, ${(scale3/2).toFixed(2)}%, 0px)`
                 dither3.style.opacity = `${scale3/400}`
-            } else {
+            })
+        } else {
+            window.requestAnimationFrame(() => {
                 dither3.style.opacity = `0`
-            }
+            })
+        }
 
             // parallax window 4
-            if ( threshold3 <= scrollTop && scrollTop <= threshold5 ) {
+        if ( threshold3 <= scrollTop && scrollTop <= threshold5 ) {
+            window.requestAnimationFrame(() => {
                 let scale4 = (scrollTop - threshold3).toFixed(2)
                 logo4.style.transform = `translate3d(0px, ${(scale4/2).toFixed(2)}%, 0px)`
                 dither4.style.opacity = `${scale4/400}`
-            } else {
+            })
+        } else {
+            window.requestAnimationFrame(() => {
                 dither4.style.opacity = `0`
-            }
-        })
+            })
+        }
 
         this.toggleFixedContainer()
         this.animateHeart()
