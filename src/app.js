@@ -199,11 +199,8 @@ class App extends React.Component {
     }
 
     componentDidMount() {
-        window.addEventListener(
-            'scroll',
-            this.handleScroll.bind(this),
-        );
-
+        window.addEventListener( 'scroll', this.handleScroll.bind(this));
+        // window.addEventListener( 'scroll', this.handleNothing.bind(this));
         window.addEventListener('onresize', this.handleResize.bind(this))
 
         this.setState({
@@ -220,6 +217,7 @@ class App extends React.Component {
                 parallaxBox2: document.getElementById('parallaxBox2'),
                 parallaxBox3: document.getElementById('parallaxBox3'),
                 parallaxBox4: document.getElementById('parallaxBox4'),
+                forevial: document.getElementById('fore-vial'),
                 forewoman: document.getElementById('fore-woman'),
                 foreman1: document.getElementById('fore-man1'),
                 foreman2: document.getElementById('fore-man2'),
@@ -237,13 +235,20 @@ class App extends React.Component {
     }
 
 
+
     handleScroll(event) {
 
+        let e = window.event || event
+        let srcElement = e.target || e.srcElement
+        let scrollTop = srcElement.documentElement.scrollTop || srcElement.body.scrollTop
+        // let scrollTop = document.scrollingElement.scrollTop || document.documentElement.scrollTop
+        // console.log(scrollingElement.scrollTop);
+
         this.setState({
-            scrollTop: event.srcElement.body.scrollTop
+            scrollTop: scrollTop
         })
         this.handleResize()
-        let scrollTop = this.state.scrollTop
+        // let scrollTop = this.state.scrollTop
         // console.log(`Scrolling: ${this.state.scrollTop}`);
 
         // move document.getElementById('') to componentDidMount for performance
@@ -263,6 +268,7 @@ class App extends React.Component {
         let parallaxBox3 = this.state.elems.parallaxBox3
         let parallaxBox4 = this.state.elems.parallaxBox4
 
+        let forevial = this.state.elems.forevial
         let forewoman = this.state.elems.forewoman
         let foreman1 = this.state.elems.foreman1
         let foreman2 = this.state.elems.foreman2
@@ -274,57 +280,47 @@ class App extends React.Component {
         let threshold5 = this.state.threshold5
 
 
+        const boundOpacity = (op) => op >= 0.99 ? 0.999 : op.toFixed(2)
         // Wrap Parallax Windows in requestAnimationFrame for performance
-        // parallax window 1
-        if ( scrollTop <= threshold1) {
-            window.requestAnimationFrame(() => {
-                logo1.style.transform = `translate3d(0px, ${(scrollTop/2).toFixed(2)}%, 0)`
-                dither1.style.opacity = `${(scrollTop/400).toFixed(2)}`
+        // window.requestAnimationFrame(() => {
+            // parallax window 1
+            if ( scrollTop <= threshold1) {
+                logo1.style.transform = `translate3d(0, ${scrollTop/2}%, 0)`
+                dither1.style.opacity = `${boundOpacity(scrollTop/400)}`
                 // people sliders
-                forewoman.style.transform = `translate3d(${(scrollTop/6).toFixed(2)}%, 0px, 0px)`
-                foreman1.style.transform = `translate3d(${(scrollTop/(5*(1 - scrollTop/2000))).toFixed(2)}%, 0px, 0px)`
-                foreman2.style.transform = `translate3d(${(scrollTop/(4*(1 - scrollTop/1500))).toFixed(2)}%, 0px, 0px)`
-            })
-        }
+                forevial.style.transform = `
+                translate3d(-${scrollTop/2}px, ${scrollTop/3}px, 0)
+                scale(${1 + scrollTop/1500})
+                `
+            }
 
-            // parallax window 2
-        if ( threshold1 <= scrollTop && scrollTop <= threshold2 ) {
-            window.requestAnimationFrame(() => {
+                // parallax window 2
+            if ( threshold1 <= scrollTop && scrollTop <= threshold2 ) {
                 let scale2 = scrollTop - threshold1
-                logo2.style.transform = `translate3d(0px, ${(scale2/2).toFixed(2)}%, 0px)`
-                dither2.style.opacity = `${scale2/400}`
-            })
-        } else {
-            window.requestAnimationFrame(() => {
+                logo2.style.transform = `translate3d(0px, ${scale2/2}%, 0px)`
+                dither2.style.opacity = `${boundOpacity(scale2/400)}`
+            } else {
                 dither2.style.opacity = `0`
-            })
-        }
+            }
 
-            // parallax window 3
-        if ( threshold2 <= scrollTop && scrollTop <= threshold3 ) {
-            window.requestAnimationFrame(() => {
-                let scale3 = (scrollTop - threshold2).toFixed(2)
-                logo3.style.transform = `translate3d(0px, ${(scale3/2).toFixed(2)}%, 0px)`
-                dither3.style.opacity = `${scale3/400}`
-            })
-        } else {
-            window.requestAnimationFrame(() => {
+                // parallax window 3
+            if ( threshold2 <= scrollTop && scrollTop <= threshold3 ) {
+                let scale3 = scrollTop - threshold2
+                logo3.style.transform = `translate3d(0px, ${scale3/2}%, 0px)`
+                dither3.style.opacity = `${boundOpacity(scale3/400)}`
+            } else {
                 dither3.style.opacity = `0`
-            })
-        }
+            }
 
-            // parallax window 4
-        if ( threshold3 <= scrollTop && scrollTop <= threshold5 ) {
-            window.requestAnimationFrame(() => {
-                let scale4 = (scrollTop - threshold3).toFixed(2)
-                logo4.style.transform = `translate3d(0px, ${(scale4/2).toFixed(2)}%, 0px)`
-                dither4.style.opacity = `${scale4/400}`
-            })
-        } else {
-            window.requestAnimationFrame(() => {
+                // parallax window 4
+            if ( threshold3 <= scrollTop && scrollTop <= threshold5 ) {
+                let scale4 = scrollTop - threshold3
+                logo4.style.transform = `translate3d(0px, ${scale4/2}%, 0px)`
+                dither4.style.opacity = `${boundOpacity(scale4/400)}`
+            } else {
                 dither4.style.opacity = `0`
-            })
-        }
+            }
+        // })
 
         this.toggleFixedContainer()
         this.animateHeart()
@@ -388,15 +384,13 @@ class App extends React.Component {
             <div>
 
                 <Parallax id="1" title="Bloodpact: Blood-Backed Health Insurance">
-                    <img className='people' id="fore-woman" src={require('./img/doctor_she.svg')} />
-                    <img className='people' id="fore-man1" src={require('./img/doctor_he4.svg')} />
-                    <img className='people' id="fore-man2" src={require('./img/doctor_he2.svg')} />
+                    <img className='parallaxItems' id="fore-vial" src={require('./img/bloodvial6.svg')} />
                 </Parallax>
                 <FixedContainer id="1"
                     lowerThreshold={this.state.threshold1}
                     scrollTop={this.state.scrollTop}
                     upperThreshold={this.state.threshold2}>
-                    <img src={require("./img/blooddrop2.svg")} />
+                    <img className="svgFloater" src={require("./img/blooddrop2.svg")} />
                     <div className="textBox">
                         1) Increase aggregate levels of blood donation
                         (can't just pay for blood since that's immoral and can
@@ -412,7 +406,7 @@ class App extends React.Component {
                     lowerThreshold={this.state.threshold2}
                     scrollTop={this.state.scrollTop}
                     upperThreshold={this.state.threshold3}>
-                    <img src={require("./img/perfusion.svg")} />
+                    <img className="svgFloater" src={require("./img/perfusion.svg")} />
                     <div className="textBox">
                         2) Solves incentive issues in health insurance:
                         people conceal information about their health status and their habits
@@ -425,7 +419,7 @@ class App extends React.Component {
                 </Parallax>
 
                 <div id={"fixedContainer3"} className="container">
-                    <img src={require("./img/bloodtest.svg")} />
+                    <img className="svgFloater" src={require("./img/bloodtest.svg")} />
                     <div className="textBox">
                         3) By donating blood we can do blood tests and screen doners for
                         viable “blood-pact” candidates. This reveals better information about
