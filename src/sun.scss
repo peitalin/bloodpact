@@ -1,0 +1,137 @@
+
+
+@keyframes sunrise {
+    0% {
+        cx: 10%;
+        cy: 90%;
+        fill: #cb8;
+    }
+    25% {
+        cx: 90%;
+        cy: 90%;
+        fill: #ddc;
+    }
+    80% {
+        cx: 90%;
+        cy: 10%;
+        fill: #ddaaff;
+    }
+    90% {
+        cx: 10%;
+        cy: 10%;
+        fill: #ace;
+    }
+    100% {
+        cx: 10%;
+        cy: 90%;
+        fill: #cb8;
+    }
+}
+
+.sun {
+    animation-name: sunrise;
+    animation-duration: 5s;
+    animation-timing-function: ease;
+    animation-iteration-count: infinite;
+}
+
+
+svg:hover circle {
+    fill: #678;
+    cx: 102;
+    r: 8;
+    transition: fill, 200ms, ease-in-out;
+}
+
+
+
+
+
+
+
+.blobs {
+    // filter: url('#goo');
+    position: absolute;
+    height: 100vh;
+    top: -17%;
+    right: -20%;
+    bottom: 100%;
+    left: 20%;
+    z-index: -1;
+}
+
+
+$dist-x: 65px;
+$dist-y: 200px;
+$bloodred: #812;
+
+@keyframes blob-left-top-anim {
+    0% {
+        transform: scale(1) translate(0, 0);
+    }
+    42% {
+        transform: scale(1.4) translate(0,0);
+    }
+    60% {
+        transform: scale(1) translate(0, $dist-y/8);
+    }
+    64% {
+        transform: scale(1) translate(0, 0);
+    }
+}
+
+@keyframes blob-right-top-anim {
+    0% {
+        transform: scale(1) translate(0, 0);
+    }
+    44% {
+        transform: scale(1.1) translate(0,0);
+    }
+    66% {
+        transform: scale(1.1) translate(0, $dist-y*4);
+    }
+    100% {
+        transform: scale(1.1) translate(0, $dist-y*4);
+    }
+}
+
+@keyframes blob-bottom {
+    0% {
+        transform: scale(1) translate(0, 0);
+    }
+    44% {
+        transform: scale(1.1) translate(0,0);
+    }
+    66% {
+        transform: scale(1.1) translate(0, $dist-y*4);
+    }
+    100% {
+        transform: scale(1.1) translate(0, $dist-y*4);
+    }
+}
+
+.blob {
+    position: absolute;
+    background: $bloodred;
+    left: 50%;
+    top: 50%;
+    width: 50px;
+    height: 50px;
+    line-height: 50px;
+    text-align: center;
+    color: white;
+    font-size: 20px;
+    border-radius: 100%;
+    margin-top: 0px;
+    margin-left: 0px;
+    // animation: blob-left-top-anim cubic-bezier(0.770, 0.000, 0.175, 1.000) 4s infinite;
+    animation: blob-left-top-anim ease-in-out 4s infinite;
+
+    &:nth-child(2) {
+        animation-name: blob-right-top-anim;
+        animation-timing-function: cubic-bezier(.85, .11, .79, .38);
+    }
+    &:nth-child(3) {
+        animation-name: blob-bottom;
+    }
+}

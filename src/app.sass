@@ -3,7 +3,10 @@
 $font-stack:    Open Sans, Helvetica, sans-serif
 $bloodred: #812
 $white: #eee
-$body-bg: transparent
+$eggshell: #f7f4e9
+$raisinblack: #270b20
+// $body-bg: transparent
+$body-bg: $eggshell
 
 /* * */
 /*   -webkit-box-sizing: border-box */
@@ -31,6 +34,9 @@ h2
     color: $bloodred
 
 
+
+img
+    width: 101vw
 
 
 .header
@@ -60,9 +66,14 @@ h2
         attachment: fixed
 
 #parallaxBox1
+    // -webkit-transform: translateZ(0)
+    // -moz-transform: translateZ(0)
+    // -ms-transform: translateZ(0)
+    // -o-transform: translateZ(0)
     background:
-        image: url('./img/bg666.png')
-        position: 75% 50%
+        color: $eggshell
+        // image: url('./img/layer7.svg')
+    height: 120vh
 
 #parallaxBox2
     background-image: url('./img/bg2.svg')
@@ -77,11 +88,20 @@ h2
 .dither
     height: 100vh
     opacity: 0
+    -webkit-transform: translateZ(0)
+    -moz-transform: translateZ(0)
+    -ms-transform: translateZ(0)
+    -o-transform: translateZ(0)
+    transform: translateZ(0)
     background:
         size: auto 100vh
         position: top center
         attachment: fixed
-        color: transparentize($bloodred, 0)
+        color: transparentize(#261B1B, 0)
+
+#dither1
+    background-color: $eggshell
+    height: 120vh
 
 #dither4
     background-color: #222
@@ -94,13 +114,17 @@ h2
     display: flex
     align-items: center
     justify-content: center
+    -webkit-transform: translateZ(0)
+    -moz-transform: translateZ(0)
+    -ms-transform: translateZ(0)
+    -o-transform: translateZ(0)
     background:
         color: transparentize($bloodred, 0.2)
     position: absolute
     top: 50%
 
 #logo1
-    margin-top: -50px
+    margin-top: -140px
 #logo2
     margin-top: -50px
 #logo3
@@ -116,18 +140,47 @@ h2
     position: absolute
     bottom: 0px
 
-#fore-vial
-    height: 100vh
-    width: 280px
-    left: 5%
-
 
 #heart-beat
+    -webkit-transform: translateZ(0)
+    -moz-transform: translateZ(0)
+    -ms-transform: translateZ(0)
+    -o-transform: translateZ(0)
     height: 280px
     position: absolute
     top: -64%
     right: 17%
 
+
+.mountain
+    -webkit-transform: translateZ(0)
+    -moz-transform: translateZ(0)
+    -ms-transform: translateZ(0)
+    -o-transform: translateZ(0)
+    position: absolute
+    bottom: 0%
+    right: 0%
+
+#mount1
+    bottom: 0%
+
+#mount2
+    bottom: 5%
+
+#mount3
+    bottom: 10%
+
+#mount4
+    bottom: 15%
+
+#mount5
+    bottom: 20%
+
+#mount6
+    bottom: 25%
+
+#mount7
+    bottom: 25%
 
 
 
@@ -144,7 +197,7 @@ $svgDimensions: 100px
         display: flex
         flex-direction: row
         text-align: center
-        background-color: #222
+        background-color: $raisinblack
         height: $svgDimensions
         z-index: 1
         top: 0
@@ -157,7 +210,7 @@ $svgDimensions: 100px
         display: flex
         flex-direction: row
         text-align: center
-        background-color: #222
+        background-color: $raisinblack
         height: $svgDimensions
         z-index: 1
         top: 0
@@ -198,7 +251,7 @@ $svgDimensions: 100px
     line-height: $svgDimensions
     text-align: center
     background:
-        color: transparentize($bloodred, 0.1)
+        color: transparentize(#3A2929, 0.1)
 
 
 
