@@ -10,39 +10,11 @@ import Form from './components/Form.js'
 // import { Field, reduxForm } from 'redux-form'
 
 import * as gsap from 'gsap'
-import { TweenLite } from 'gsap'
-import moment from 'moment'
-import lodash from 'lodash'
+import { TweenLite, TweenMax } from 'gsap'
+
+import Mountain1 from './mountain1.js'
 
 
-
-
-
-class Cloud extends React.Component {
-
-    componentDidMount() {
-        let elem = document.getElementById(this.props.id)
-        elem.style.fill = `${this.props.fill}`
-        elem.style.transform = `
-        scaleX(${this.props.scaleX})
-        scaleY(${this.props.scaleY})
-        translateX(${this.props.x}%)
-        translateY(${this.props.y}%)
-        `
-    }
-
-    render() {
-        return (
-            <path className='cloud' id={this.props.id}
-            d="M27.244,8.64c0.04-0.319,0.068-0.643,0.068-0.973C27.312,3.432,23.88,0,19.646,0
-            c-3.069,0-6.047,2.208-7.047,5.208c-1.625-0.922-3.341-1.195-4.595-0.104c-0.012,
-            0.01-0.019,0.022-0.031,0.033 c-0.02,0.014-0.042,0.02-0.062,0.034c-1.236,
-            0.875-1.686,2.49-1.336,4.123C6.543,9.3,6.6,9.3,6.6,9.3 c-3.596,
-            0-6.6,2.914-6.6,6.6c0,3.596,2.914,6.6,6.6,6.6h19.896c3.791,
-            0,6.864-3.073,6.864-6.864 C33.271,11.941,30.639,9.054,27.244,8.64z" />
-        );
-    }
-}
 
 
 class App extends React.Component {
@@ -73,9 +45,11 @@ class App extends React.Component {
             })
             // THRESHOLDS FOR Fixed containers/placeholders
             // window-height * n plus (n-1)*100px for the placeholder
-            const getWindowThreshold = (n) => window.innerHeight*n + (n-1)*this.state.bannerHeight
+            const getWindowThreshold = (n) => {
+                return (window.innerHeight*1.4 + 300 + (n-1)*(window.innerHeight + this.state.bannerHeight))
+            }
             this.setState({
-                threshold1: getWindowThreshold(1),
+                threshold1: window.innerHeight,
                 threshold2: getWindowThreshold(2),
                 threshold3: getWindowThreshold(3),
                 threshold4: getWindowThreshold(4),
@@ -165,8 +139,6 @@ class App extends React.Component {
         let parallaxBox3 = this.state.elems.parallaxBox3
         let parallaxBox4 = this.state.elems.parallaxBox4
 
-        // let forevial = this.state.elems.forevial
-        let forecloud1 = this.state.elems.forecloud1
 
         let threshold1 = this.state.threshold1
         let threshold2 = this.state.threshold2
@@ -178,35 +150,32 @@ class App extends React.Component {
         // this.state.elems.forecloud1.style.willchange = 'transform, scale'
         this.state.elems.dither1.style.willchange = 'opacity'
         this.state.elems.logo1.style.willchange = 'transform'
-        this.state.elems.fixedContainer1.style.willchange = 'position'
-        this.state.elems.fixedContainer2.style.willchange = 'position'
-        this.state.elems.fixedContainer3.style.willchange = 'position'
 
 
         const boundOpacity = (op) => op >= 0.99 ? 0.999 : op.toFixed(2)
         // Wrap Parallax Windows in requestAnimationFrame for performance
         // parallax window 1
-        if ( scrollTop <= threshold1) {
+        if ( scrollTop <= threshold1-150) {
             logo1.style.transform = `translate3d(0, ${scrollTop/2}%, 0)`
             // dither1.style.opacity = `${1-boundOpacity(scrollTop/100)}`
 
-            mount7.style.transform = `translateY(${scrollTop/4}%)`
-            mount6.style.transform = `translateY(${scrollTop/6}%)`
-            mount5.style.transform = `translateY(${scrollTop/4}%)`
-            mount4.style.transform = `translateY(${scrollTop/7}%)`
-            mount3.style.transform = `translateY(${scrollTop/4}%)`
-            mount2.style.transform = `translateY(${scrollTop/5}%)`
-            mount1.style.transform = `translateY(${scrollTop/6}%)`
+            mount7.style.transform = `translate3d(0, ${scrollTop/4}%, 0)`
+            mount6.style.transform = `translate3d(0, ${scrollTop/5.6}%, 0)`
+            mount5.style.transform = `translate3d(0, ${scrollTop/4.5}%, 0)`
+            mount4.style.transform = `translate3d(0, ${scrollTop/7}%, 0)`
+            mount3.style.transform = `translate3d(0, ${scrollTop/4.6}%, 0)`
+            mount2.style.transform = `translate3d(0, ${scrollTop/4.8}%, 0)`
+            // mount1.style.transform = `translate3d(0, ${scrollTop/100}%, 0)`
 
-            // forecloud1.style.transform = `
-            // translate(-${scrollTop/20}px, ${scrollTop/8}px)
-            // scale(${1 + scrollTop/1600})
-            // `
+            TweenMax.to("#mount1", 2, {morphSVG: "#mount1"})
 
         }
 
             // parallax window 2
-        if ( threshold1 <= scrollTop && scrollTop <= threshold2 ) {
+        if ( threshold1 <= scrollTop+300 && scrollTop <= threshold2 ) {
+
+            TweenMax.to("#mount1", 2, {morphSVG: "#mount1rect"})
+
             let scale2 = scrollTop - threshold1
             logo2.style.transform = `translate3d(0px, ${scale2/2}%, 0px)`
             dither2.style.opacity = `${boundOpacity(scale2/400)}`
@@ -232,59 +201,16 @@ class App extends React.Component {
             dither4.style.opacity = `0`
         }
 
-        this.toggleFixedContainer()
+        // this.toggleFixedContainer()
         this.animateHeart()
-
-    }
-
-    toggleFixedContainer() {
-        let scrollTop = this.state.scrollTop
-        let fixedContainer1 = this.state.elems.fixedContainer1
-        let fixedContainer2 = this.state.elems.fixedContainer2
-        let fixedContainer3 = this.state.elems.fixedContainer3
-        let threshold1 = this.state.threshold1
-        let threshold2 = this.state.threshold2
-        let threshold3 = this.state.threshold3
-
-        // 1st fixed container
-        if (threshold1 <= scrollTop && scrollTop <= threshold2) {
-            fixedContainer1.style.position = 'fixed'
-        } else {
-            fixedContainer1.style.position = 'relative'
-        }
-        // 2nd fixed container
-        if (threshold2 <= scrollTop && scrollTop <= threshold3) {
-            fixedContainer2.style.position = 'fixed'
-        } else {
-            fixedContainer2.style.position = 'relative'
-        }
-
         // TweenLite.to(c1, 5, {opacity: 0})
+        // TweenMax.to("#mount1", 4, {opacity: 0})
+        // TweenMax.to("#mount2", 3, {opacity: 0})
+        // TweenMax.to("#mount3", 2, {opacity: 0})
+        MorphSVGPlugin.convertToPath('#mount1')
+        MorphSVGPlugin.convertToPath('#mount1rect')
+        // TweenMax.to("#mount1", 2, {morphSVG: "#mount1rect"})
 
-
-    }
-
-
-    animateHeart() {
-        // Heart animation
-        let scrollTop = this.state.scrollTop
-        let heart = document.getElementById('heart-beat')
-        let lastRotationValue = scrollTop / 1000 * Math.exp(-scrollTop/800)
-        let transRate = scrollTop/4
-        let transRate2 = scrollTop/ (4 / (1+(scrollTop - 650)/2000))
-
-        if (scrollTop <= 650) {
-            heart.style.transform = `
-                translate3d(0, ${transRate}%, 0)
-                rotate(${0.7 + lastRotationValue}turn)
-            `
-        }
-        if (650 < scrollTop && scrollTop < this.state.threshold2) {
-            heart.style.transform = `
-                translate3d(0, ${transRate2}%, 0)
-                rotate(${0.7 + lastRotationValue}turn)
-            `
-        }
     }
 
     render() {
@@ -292,69 +218,49 @@ class App extends React.Component {
             <div>
 
                 <Parallax id="1" title="Bloodpact: Blood-Backed Health Insurance">
-                    {/*  */}
-                    {/* <div className="blobs"> */}
-                    {/*     <div className="blob"></div> */}
-                    {/*     <div className="blob"></div> */}
-                    {/* </div> */}
-                    {/*  */}
-                    {/* <svg width="100vw" height="100vh" viewBox="0 0 100 100"> */}
-                    {/*     <defs> */}
-                    {/*         <filter id="goo"> */}
-                    {/*             <feGaussianBlur in="SourceGraphic" stdDeviation="10" result="blur" /> */}
-                    {/*             <feColorMatrix in="blur" */}
-                    {/*                 mode="matrix" */}
-                    {/*                 values="1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  0 0 0 18 -7" */}
-                    {/*                 result="goo" /> */}
-                    {/*             <feBlend in="SourceGraphic" in2="goo" /> */}
-                    {/*         </filter> */}
-                    {/*     </defs> */}
-                    {/*     <Cloud id="cloud1" fill="#eee" x={10} y={5} scaleX={1} scaleY={0.9} /> */}
-                    {/*     <Cloud id="cloud2" fill="#ddd" x={200} y={90} scaleX={1} scaleY={0.9} /> */}
-                    {/*  */}
-                    {/* </svg> */}
                     <img id="mount7" className='mountain' src={require("./img/layer7.svg")} />
                     <img id="mount6" className='mountain' src={require("./img/layer6.svg")} />
                     <img id="mount5" className='mountain' src={require("./img/layer5.svg")} />
                     <img id="mount4" className='mountain' src={require("./img/layer4.svg")} />
                     <img id="mount3" className='mountain' src={require("./img/layer3.svg")} />
                     <img id="mount2" className='mountain' src={require("./img/layer2.svg")} />
-                    <img id="mount1" className='mountain' src={require("./img/layer1.svg")} />
+                    <Mountain1 id="mount1" />
+                    {/* <img id="mount0" className='mountain' src={require("./img/layer1.svg")} /> */}
                 </Parallax>
 
 
-                {/* <FixedContainer id="1" */}
-                {/*     lowerThreshold={this.state.threshold1} */}
-                {/*     scrollTop={this.state.scrollTop} */}
-                {/*     upperThreshold={this.state.threshold2}> */}
-                <div className="textBox">
-                    1) Increase aggregate levels of blood donation
-                    (can't just pay for blood since that's immoral and can
-                    actually decrease levels of donation)
+                <div id='spacer' style={{backgroundColor: "#270b20", height: 100 }}>
+                    spacer
                 </div>
-                {/* </FixedContainer> */}
+                <div id={"fixedContainer1"} className="container">
+                    <div className="textBox">
+                        1) Increase aggregate levels of blood donation
+                        (can't just pay for blood since that's immoral and can
+                        actually decrease levels of donation)
+                    </div>
+                </div>
+                <div id='spacer' style={{backgroundColor: "#270b20", height: 200 }}>
+                    spacer
+                </div>
 
 
                 <Parallax id="2" title="Give Blood and Gift Insurance to Friends and Strangers">
                     <img id="heart-beat" src={require("./img/heart.svg")} />
                 </Parallax>
-                <FixedContainer id="2"
-                    lowerThreshold={this.state.threshold2}
-                    scrollTop={this.state.scrollTop}
-                    upperThreshold={this.state.threshold3}>
+                <div id={"fixedContainer3"} className="container">
                     <img className="svgFloater" src={require("./img/perfusion.svg")} />
                     <div className="textBox">
                         2) Solves incentive issues in health insurance:
                         people conceal information about their health status and their habits
                         (smoking, diet) to obtain cheaper premiums.
                     </div>
-                </FixedContainer>
+                </div>
 
 
                 <Parallax id="3" title="One pint can save three lives">
                 </Parallax>
 
-                <div id={"fixedContainer3"} className="container">
+                <div id={"fixedContainer2"} className="container">
                     <img className="svgFloater" src={require("./img/bloodtest.svg")} />
                     <div className="textBox">
                         3) By donating blood we can do blood tests and screen doners for
@@ -406,13 +312,62 @@ class App extends React.Component {
 
 
                 <div className="spacer"></div>
-                <h2>Sign up and help us pitch the idea to the RedCross</h2>
+                <h2>Sign up for more information</h2>
                 <div className="textGridSingle">
                     <div className="textBox"> <Form /> </div>
                 </div>
                 <div className="spacer"></div>
             </div>
         );
+    }
+
+    toggleFixedContainer() {
+        let scrollTop = this.state.scrollTop
+        let fixedContainer1 = this.state.elems.fixedContainer1
+        let fixedContainer2 = this.state.elems.fixedContainer2
+        let fixedContainer3 = this.state.elems.fixedContainer3
+        let threshold1 = this.state.threshold1
+        let threshold2 = this.state.threshold2
+        let threshold3 = this.state.threshold3
+
+        // 1st fixed container
+        if (threshold1 <= scrollTop && scrollTop <= threshold2) {
+            fixedContainer1.style.position = 'fixed'
+        } else {
+            fixedContainer1.style.position = 'relative'
+        }
+        // 2nd fixed container
+        if (threshold2 <= scrollTop && scrollTop <= threshold3) {
+            fixedContainer2.style.position = 'fixed'
+        } else {
+            fixedContainer2.style.position = 'relative'
+        }
+
+
+
+    }
+
+
+    animateHeart() {
+        // Heart animation
+        let scrollTop = this.state.scrollTop
+        let heart = document.getElementById('heart-beat')
+        let lastRotationValue = scrollTop / 1000 * Math.exp(-scrollTop/800)
+        let transRate = scrollTop/4
+        let transRate2 = scrollTop/ (4 / (1+(scrollTop - 650)/2000))
+
+        if (scrollTop <= 650) {
+            heart.style.transform = `
+                translate3d(0, ${transRate}%, 0)
+                rotate(${0.7 + lastRotationValue}turn)
+            `
+        }
+        if (650 < scrollTop && scrollTop < this.state.threshold2) {
+            heart.style.transform = `
+                translate3d(0, ${transRate2}%, 0)
+                rotate(${0.7 + lastRotationValue}turn)
+            `
+        }
     }
 }
 

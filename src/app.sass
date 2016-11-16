@@ -35,8 +35,6 @@ h2
 
 
 
-img
-    width: 101vw
 
 
 .header
@@ -73,7 +71,7 @@ img
     background:
         color: $eggshell
         // image: url('./img/layer7.svg')
-    height: 120vh
+    height: 140vh
 
 #parallaxBox2
     background-image: url('./img/bg2.svg')
@@ -97,11 +95,11 @@ img
         size: auto 100vh
         position: top center
         attachment: fixed
-        color: transparentize(#261B1B, 0)
+        color: transparentize($bloodred, 0)
 
 #dither1
-    background-color: $eggshell
-    height: 120vh
+    background-color: #261B1B
+    height: 140vh
 
 #dither4
     background-color: #222
@@ -109,7 +107,7 @@ img
 
 
 .logo
-    height: 100px
+    height: 60px
     width: 100%
     display: flex
     align-items: center
@@ -119,12 +117,12 @@ img
     -ms-transform: translateZ(0)
     -o-transform: translateZ(0)
     background:
-        color: transparentize($bloodred, 0.2)
+        color: transparentize($bloodred, 0.3)
     position: absolute
     top: 50%
 
 #logo1
-    margin-top: -140px
+    margin-top: -150px
 #logo2
     margin-top: -50px
 #logo3
@@ -158,29 +156,35 @@ img
     -ms-transform: translateZ(0)
     -o-transform: translateZ(0)
     position: absolute
+    width: 101vw
     bottom: 0%
     right: 0%
 
 #mount1
     bottom: 0%
 
+#mount1rect
+    bottom: 0%
+    visibility: hidden
+    // shape to morph into (flat line), must be hidden
+
 #mount2
-    bottom: 5%
+    bottom: 4%
 
 #mount3
-    bottom: 10%
+    bottom: 8%
 
 #mount4
-    bottom: 15%
+    bottom: 12%
 
 #mount5
-    bottom: 20%
+    bottom: 16%
 
 #mount6
-    bottom: 25%
+    bottom: 20%
 
 #mount7
-    bottom: 25%
+    bottom: 20%
 
 
 
