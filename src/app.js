@@ -68,13 +68,18 @@ class App extends React.Component {
                 logo2: document.getElementById('logo2'),
                 logo3: document.getElementById('logo3'),
                 logo4: document.getElementById('logo4'),
+
                 mount1: document.getElementById('mount1'),
+                mount1axes: document.getElementById('mount1axes'),
                 mount2: document.getElementById('mount2'),
                 mount3: document.getElementById('mount3'),
                 mount4: document.getElementById('mount4'),
+                mount4supply: document.getElementById('mount4supply'),
                 mount5: document.getElementById('mount5'),
                 mount6: document.getElementById('mount6'),
+                mount6demand: document.getElementById('mount6demand'),
                 mount7: document.getElementById('mount7'),
+
                 dither1: document.getElementById('dither1'),
                 dither2: document.getElementById('dither2'),
                 dither3: document.getElementById('dither3'),
@@ -121,13 +126,18 @@ class App extends React.Component {
         let logo3 = this.state.elems.logo3
         let logo4 = this.state.elems.logo4
 
-        let mount1 = this.state.elems.mount1
-        let mount2 = this.state.elems.mount2
-        let mount3 = this.state.elems.mount3
-        let mount4 = this.state.elems.mount4
-        let mount5 = this.state.elems.mount5
-        let mount6 = this.state.elems.mount6
         let mount7 = this.state.elems.mount7
+        let mount6 = this.state.elems.mount6
+        let mount6demand = this.state.elems.mount6demand
+
+        let mount5 = this.state.elems.mount5
+        let mount4 = this.state.elems.mount4
+        let mount4supply = this.state.elems.mount4supply
+
+        let mount3 = this.state.elems.mount3
+        let mount2 = this.state.elems.mount2
+        let mount1 = this.state.elems.mount1
+        let mount1axes = this.state.elems.mount1axes
 
         let dither1 = this.state.elems.dither1
         let dither2 = this.state.elems.dither2
@@ -147,49 +157,82 @@ class App extends React.Component {
         let threshold5 = this.state.threshold5
 
         // lets browser know ahead of time about CSS transforms
-        // this.state.elems.forecloud1.style.willchange = 'transform, scale'
-        this.state.elems.dither1.style.willchange = 'opacity'
-        this.state.elems.logo1.style.willchange = 'transform'
+        mount1axes.style.willchange = 'opacity'
+        mount2.style.willchange = 'opacity'
+        mount3.style.willchange = 'opacity'
+        mount4.style.willchange = 'opacity'
+        mount4supply.style.willchange = 'opacity'
+        mount5.style.willchange = 'opacity'
+        mount6.style.willchange = 'opacity'
+        mount6demand.style.willchange = 'opacity'
+        mount7.style.willchange = 'opacity'
 
 
         const boundOpacity = (op) => op >= 0.99 ? 0.999 : op.toFixed(2)
         // Wrap Parallax Windows in requestAnimationFrame for performance
         // parallax window 1
-        if ( scrollTop <= threshold1-150) {
-            logo1.style.transform = `translate3d(0, ${scrollTop/2}%, 0)`
+        if ( scrollTop <= threshold1-window.innerHeight/2) {
+			logo1.style.transform = `translate3d(0, ${scrollTop/2}%, 0)`
             // dither1.style.opacity = `${1-boundOpacity(scrollTop/100)}`
 
             mount7.style.transform = `translate3d(0, ${scrollTop/4}%, 0)`
-            mount6.style.transform = `translate3d(0, ${scrollTop/5.6}%, 0)`
-            mount5.style.transform = `translate3d(0, ${scrollTop/4.5}%, 0)`
-            mount4.style.transform = `translate3d(0, ${scrollTop/7}%, 0)`
-            mount3.style.transform = `translate3d(0, ${scrollTop/4.6}%, 0)`
-            mount2.style.transform = `translate3d(0, ${scrollTop/4.8}%, 0)`
-            // mount1.style.transform = `translate3d(0, ${scrollTop/100}%, 0)`
 
-            TweenMax.to("#mount1", 2, {morphSVG: "#mount1"})
+            mount6.style.transform = `translate3d(0, ${scrollTop/6}%, 0)`
+            mount6demand.style.transform = `translate3d(0, ${scrollTop/6}%, 0)`
+
+            mount5.style.transform = `translate3d(0, ${scrollTop/4}%, 0)`
+
+            mount4.style.transform = `translate3d(0, ${scrollTop/6.6}%, 0)`
+            mount4supply.style.transform = `translate3d(0, ${scrollTop/6.6}%, 0)`
+
+            mount3.style.transform = `translate3d(0, ${scrollTop/4.2}%, 0)`
+            mount2.style.transform = `translate3d(0, ${scrollTop/4}%, 0)`
+
+            TweenMax.to("#mount4supply", .5, {opacity: 0})
+            TweenMax.to("#mount6demand", .5, {opacity: 0})
+            TweenMax.to("#mount1axes", .5, {opacity: 0})
+
+            TweenMax.to("#mount1", 1, {morphSVG: "#mount1"})
+            TweenMax.to("#mount2", .5, {opacity: 1})
+            TweenMax.to("#mount3", .5, {opacity: 1})
+            TweenMax.to("#mount4", .5, {opacity: 1})
+            TweenMax.to("#mount5", .5, {opacity: 1})
+            TweenMax.to("#mount6", .5, {opacity: 1})
+            TweenMax.to("#mount7", .5, {opacity: 1})
 
         }
 
+        if ( threshold1 <= scrollTop+window.innerHeight/2 && scrollTop <= threshold2) {
+            TweenMax.to("#mount4supply", 1, {opacity: 1})
+            TweenMax.to("#mount6demand", 1.5, {opacity: 1})
+            TweenMax.to("#mount1axes", 2, {opacity: 1})
+
+            TweenMax.to("#mount2", 1, {opacity: 0})
+            TweenMax.to("#mount3", 1, {opacity: 0})
+            TweenMax.to("#mount4", 1, {opacity: 0})
+            TweenMax.to("#mount5", 1, {opacity: 0})
+            TweenMax.to("#mount6", 1, {opacity: 0})
+            TweenMax.to("#mount7", 1, {opacity: 0})
+            TweenMax.to("#mount1", 1, {morphSVG: "#mount1rect"})
+        }
+
+
             // parallax window 2
-        if ( threshold1 <= scrollTop+300 && scrollTop <= threshold2 ) {
-
-            TweenMax.to("#mount1", 2, {morphSVG: "#mount1rect"})
-
+        if ( threshold1 <= scrollTop && scrollTop <= threshold2 ) {
             let scale2 = scrollTop - threshold1
             logo2.style.transform = `translate3d(0px, ${scale2/2}%, 0px)`
-            dither2.style.opacity = `${boundOpacity(scale2/400)}`
+            // dither2.style.opacity = `${boundOpacity(scale2/400)}`
         } else {
-            dither2.style.opacity = `0`
+            // dither2.style.opacity = `0`
         }
 
             // parallax window 3
         if ( threshold2 <= scrollTop && scrollTop <= threshold3 ) {
             let scale3 = scrollTop - threshold2
             logo3.style.transform = `translate3d(0px, ${scale3/2}%, 0px)`
-            dither3.style.opacity = `${boundOpacity(scale3/400)}`
+            // dither3.style.opacity = `${boundOpacity(scale3/400)}`
         } else {
-            dither3.style.opacity = `0`
+            // dither3.style.opacity = `0`
         }
 
             // parallax window 4
@@ -202,7 +245,7 @@ class App extends React.Component {
         }
 
         // this.toggleFixedContainer()
-        this.animateHeart()
+        // this.animateHeart()
         // TweenLite.to(c1, 5, {opacity: 0})
         // TweenMax.to("#mount1", 4, {opacity: 0})
         // TweenMax.to("#mount2", 3, {opacity: 0})
@@ -219,19 +262,23 @@ class App extends React.Component {
 
                 <Parallax id="1" title="Bloodpact: Blood-Backed Health Insurance">
                     <img id="mount7" className='mountain' src={require("./img/layer7.svg")} />
+
                     <img id="mount6" className='mountain' src={require("./img/layer6.svg")} />
+                    <img id="mount6demand" className='mountain' src={require("./img/demand.svg")} />
+
                     <img id="mount5" className='mountain' src={require("./img/layer5.svg")} />
+
                     <img id="mount4" className='mountain' src={require("./img/layer4.svg")} />
+                    <img id="mount4supply" className='mountain' src={require("./img/supply.svg")} />
+
                     <img id="mount3" className='mountain' src={require("./img/layer3.svg")} />
                     <img id="mount2" className='mountain' src={require("./img/layer2.svg")} />
+
+                    <img id="mount1axes" className='mountain' src={require("./img/axes.svg")} />
                     <Mountain1 id="mount1" />
-                    {/* <img id="mount0" className='mountain' src={require("./img/layer1.svg")} /> */}
                 </Parallax>
 
 
-                <div id='spacer' style={{backgroundColor: "#270b20", height: 100 }}>
-                    spacer
-                </div>
                 <div id={"fixedContainer1"} className="container">
                     <div className="textBox">
                         1) Increase aggregate levels of blood donation
@@ -239,7 +286,7 @@ class App extends React.Component {
                         actually decrease levels of donation)
                     </div>
                 </div>
-                <div id='spacer' style={{backgroundColor: "#270b20", height: 200 }}>
+                <div id='spacer' style={{backgroundColor: "#270b20", height: 300 }}>
                     spacer
                 </div>
 
