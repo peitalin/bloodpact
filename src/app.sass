@@ -64,10 +64,10 @@ h2
         attachment: fixed
 
 #parallaxBox1
-    // -webkit-transform: translateZ(0)
-    // -moz-transform: translateZ(0)
-    // -ms-transform: translateZ(0)
-    // -o-transform: translateZ(0)
+    -webkit-transform: translateZ(0)
+    -moz-transform: translateZ(0)
+    -ms-transform: translateZ(0)
+    -o-transform: translateZ(0)
     background:
         color: $eggshell
         // image: url('./img/layer7.svg')
@@ -124,9 +124,9 @@ h2
 #logo1
     margin-top: -25%
 #logo2
-    margin-top: -50px
+    margin-top: -25%
 #logo3
-    margin-top: -50px
+    margin-top: -25%
 #logo4
     margin-top: -250px
     background-color: transparentize(#222, 0.2)
@@ -168,8 +168,9 @@ h2
     visibility: hidden
     // shape to morph into (flat line), must be hidden
 #mount1axes
-    bottom: -4.2%
+    bottom: -5%
     z-index: 1
+    opacity: 0
 
 #mount2
     bottom: 10%
@@ -181,6 +182,7 @@ h2
     bottom: 14%
 #mount4supply
     bottom: 14%
+    opacity: 0
 
 #mount5
     bottom: 16%
@@ -189,6 +191,7 @@ h2
     bottom: 16%
 #mount6demand
     bottom: 16%
+    opacity: 0
 
 #mount7
     bottom: 16%
@@ -206,10 +209,10 @@ $svgDimensions: 100px
         color: #eee
         position: relative
         display: flex
-        flex-direction: row
+        flex-direction: column
         text-align: center
         background-color: $raisinblack
-        height: $svgDimensions
+        /* height: $svgDimensions */
         z-index: 1
         top: 0
         width: 100%
@@ -222,15 +225,11 @@ $svgDimensions: 100px
         flex-direction: row
         text-align: center
         background-color: $raisinblack
-        height: $svgDimensions
         z-index: 1
         top: 0
         width: 100%
         position: fixed
         visibility: hidden
-
-
-
 
 
 
@@ -251,10 +250,15 @@ $svgDimensions: 100px
 
 
 
-.svgFloater
+.mainTextBox
+    display: flex
+    justify-content: center
+    align-items: flex-start
     flex: 1
-    max-width: $svgDimensions
-    max-height: $svgDimensions
+    width: auto
+    margin: 0
+
+
 
 .spacer
     height: 100px
@@ -262,9 +266,15 @@ $svgDimensions: 100px
     line-height: $svgDimensions
     text-align: center
     background:
-        color: transparentize(#3A2929, 0.1)
+        color: $raisinblack
 
 
+// After parallax screens
+
+.svgFloater
+    flex: 1
+    max-width: $svgDimensions
+    max-height: $svgDimensions
 
 .textBox
     display: flex
@@ -273,6 +283,7 @@ $svgDimensions: 100px
     flex: 2
     width: auto
     margin: 2%
+
 
 .textGrid
     display: flex

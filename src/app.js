@@ -3,7 +3,6 @@
 import React from 'react'
 import './app.sass'
 import './sun.scss'
-import SVGFloater from './components/svgFloater.js'
 import FixedContainer from './components/FixedContainer.js'
 import Parallax from './components/Parallax.js'
 import Form from './components/Form.js'
@@ -12,7 +11,7 @@ import Form from './components/Form.js'
 import * as gsap from 'gsap'
 import { TweenLite, TweenMax } from 'gsap'
 
-import Mountain1 from './mountain1.js'
+import Mountain1 from './components/mountain1.js'
 
 
 
@@ -97,6 +96,7 @@ class App extends React.Component {
             }
         })
 
+
     }
 
     componentWillUnmount() {
@@ -172,13 +172,13 @@ class App extends React.Component {
         // Wrap Parallax Windows in requestAnimationFrame for performance
         // parallax window 1
         if ( scrollTop <= threshold1-window.innerHeight/2) {
-			logo1.style.transform = `translate3d(0, ${scrollTop/2}%, 0)`
+            logo1.style.transform = `translate3d(0, ${scrollTop/2}%, 0)`
             // dither1.style.opacity = `${1-boundOpacity(scrollTop/100)}`
 
             mount7.style.transform = `translate3d(0, ${scrollTop/4}%, 0)`
 
-            mount6.style.transform = `translate3d(0, ${scrollTop/6}%, 0)`
-            mount6demand.style.transform = `translate3d(0, ${scrollTop/6}%, 0)`
+            mount6.style.transform = `translate3d(0, ${scrollTop/5.6}%, 0)`
+            mount6demand.style.transform = `translate3d(0, ${scrollTop/5.6}%, 0)`
 
             mount5.style.transform = `translate3d(0, ${scrollTop/4}%, 0)`
 
@@ -188,8 +188,8 @@ class App extends React.Component {
             mount3.style.transform = `translate3d(0, ${scrollTop/4.2}%, 0)`
             mount2.style.transform = `translate3d(0, ${scrollTop/4}%, 0)`
 
-            TweenMax.to("#mount4supply", .5, {opacity: 0})
             TweenMax.to("#mount6demand", .5, {opacity: 0})
+            TweenMax.to("#mount4supply", .5, {opacity: 0})
             TweenMax.to("#mount1axes", .5, {opacity: 0})
 
             TweenMax.to("#mount1", 1, {morphSVG: "#mount1"})
@@ -203,16 +203,16 @@ class App extends React.Component {
         }
 
         if ( threshold1 <= scrollTop+window.innerHeight/2 && scrollTop <= threshold2) {
-            TweenMax.to("#mount4supply", 1, {opacity: 1})
-            TweenMax.to("#mount6demand", 1.5, {opacity: 1})
-            TweenMax.to("#mount1axes", 2, {opacity: 1})
+            TweenMax.to("#mount6demand", 1, {opacity: 1, delay: 0})
+            TweenMax.to("#mount4supply", 1, {opacity: 1, delay: 0})
+            TweenMax.to("#mount1axes", 1, {opacity: 1, delay: 0})
 
-            TweenMax.to("#mount2", 1, {opacity: 0})
-            TweenMax.to("#mount3", 1, {opacity: 0})
-            TweenMax.to("#mount4", 1, {opacity: 0})
-            TweenMax.to("#mount5", 1, {opacity: 0})
-            TweenMax.to("#mount6", 1, {opacity: 0})
             TweenMax.to("#mount7", 1, {opacity: 0})
+            TweenMax.to("#mount6", 1, {opacity: 0})
+            TweenMax.to("#mount5", 1, {opacity: 0})
+            TweenMax.to("#mount4", 1, {opacity: 0})
+            TweenMax.to("#mount3", 1, {opacity: 0})
+            TweenMax.to("#mount2", 1, {opacity: 0})
             TweenMax.to("#mount1", 1, {morphSVG: "#mount1rect"})
         }
 
@@ -280,22 +280,36 @@ class App extends React.Component {
 
 
                 <div id={"fixedContainer1"} className="container">
-                    <div className="textBox">
-                        1) Increase aggregate levels of blood donation
-                        (can't just pay for blood since that's immoral and can
-                        actually decrease levels of donation)
+                    <div className="mainTextBox">
+                        Blood lasts 5 weeks and supply varies over time.<br/>
+                        We need to repeat donors to smooth blood donations over time.
+                    </div>
+                    <div className="spacer" style={{height: 40}}></div>
+                    <div className="mainTextBox">
+						What if you could secure affordable health insurance for family and friends<br/>
+						by donating blood on a regular basis?
+                    </div>
+                    <div className="spacer" style={{height: 40}}></div>
+                    <div className="mainTextBox">
+						As you know, health insurance is bloody expensive.<br/>
+						Much of the cost is in screening and monitoring high risk individuals.<br/>
+						It turns out that blood donors are reguarly screened to ensure their health.
+                    </div>
+                    <div className="spacer" style={{height: 40}}></div>
+                    <div className="mainTextBox">
+						Outsourcing screening and monitoring to bloodbanks cuts costs <br/>
+						It also reduces premiums since donors are low-risk (low all-cause mortality)
                     </div>
                 </div>
-                <div id='spacer' style={{backgroundColor: "#270b20", height: 300 }}>
-                    spacer
-                </div>
+                <div className="spacer" style={{height: 80}}>s</div>
+
+
 
 
                 <Parallax id="2" title="Give Blood and Gift Insurance to Friends and Strangers">
                     <img id="heart-beat" src={require("./img/heart.svg")} />
                 </Parallax>
                 <div id={"fixedContainer3"} className="container">
-                    <img className="svgFloater" src={require("./img/perfusion.svg")} />
                     <div className="textBox">
                         2) Solves incentive issues in health insurance:
                         people conceal information about their health status and their habits
@@ -308,7 +322,6 @@ class App extends React.Component {
                 </Parallax>
 
                 <div id={"fixedContainer2"} className="container">
-                    <img className="svgFloater" src={require("./img/bloodtest.svg")} />
                     <div className="textBox">
                         3) By donating blood we can do blood tests and screen doners for
                         viable “blood-pact” candidates. This reveals better information about
