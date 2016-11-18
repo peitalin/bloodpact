@@ -306,32 +306,45 @@ class App extends React.Component {
 
 
 
-                <Parallax id="2" title="Give Blood and Gift Insurance to Friends and Strangers">
+                <Parallax id="2" title="Give Blood and Secure Affordable Health Insurance">
                     <img id="heart-beat" src={require("./img/heart.svg")} />
                 </Parallax>
-                <div id={"fixedContainer3"} className="container">
+                <div id={"fixedContainer2"} className="container">
                     <div className="textBox">
-                        2) Solves incentive issues in health insurance:
-                        people conceal information about their health status and their habits
-                        (smoking, diet) to obtain cheaper premiums.
+						Value proposition (for donors): lower premiums for family and friends. <br/>
+						Help others by contributing blood, platelets (expires in 5 days) and plasma
                     </div>
                 </div>
 
 
-                <Parallax id="3" title="One pint can save three lives">
+                <Parallax id="3" title="Blood as premium, Blood as Data, Blood as a product...">
                 </Parallax>
 
                 <div id={"fixedContainer2"} className="container">
                     <div className="textBox">
-                        3) By donating blood we can do blood tests and screen doners for
-                        viable “blood-pact” candidates. This reveals better information about
-                        their diet, habits and actual state of health.
+						Value proposition (for underwriters): Blood data on individuals every 3 months.<br/>
+						Outsource screening to bloodbanks to reduce costs. <br/>
+						Encourage healthy lifestyles and lower risk and claims.
+                    </div>
+                    <div className="textBox">
+						Value proposition (for bloodbanks): predictable blood supply over time. <br/>
+						Lower testing costs (testing repeat donors). <br/>
+						Lower marketing costs. <br/>
                     </div>
                 </div>
 
 
-                <Parallax id="4" title="Enter the blood-pact challenge and fight blood-bourne disease">
+                <Parallax id="4" title="1 pint saves 3 lives, join Bloodpact and nominate 3 others for coverage">
                 </Parallax>
+
+                <div id={"fixedContainer4"} className="container">
+                    <div className="textBox">
+						Using funds raised from selling platelets (expires in 5 days),<br/>
+						We can insure members outside of the Bloodpact network for viral growth: <br/>
+						Nominate friends and strangers for short-term coverage <br/>
+
+                    </div>
+                </div>
 
 
                 <h2>Blood has a shelf life of 5 weeks</h2>
