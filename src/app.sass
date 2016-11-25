@@ -124,7 +124,7 @@ h2
 #logo1
     margin-top: -25%
 #logo2
-    margin-top: -25%
+    margin-top: -50%
 #logo3
     margin-top: -25%
 #logo4
@@ -146,7 +146,7 @@ h2
     -o-transform: translateZ(0)
     height: 280px
     position: absolute
-    top: -64%
+    top: 50%
     right: 17%
 
 
@@ -168,7 +168,7 @@ h2
     visibility: hidden
     // shape to morph into (flat line), must be hidden
 #mount1axes
-    bottom: -5%
+    bottom: -1%
     z-index: 1
     opacity: 0
 
@@ -198,6 +198,12 @@ h2
 
 
 
+#family_premiums
+    visibility: hidden
+
+#individual_premiums
+    visibility: hidden
+
 ////////////////////////////////////////////
 
 
@@ -212,61 +218,91 @@ $svgDimensions: 100px
         flex-direction: column
         text-align: center
         background-color: $raisinblack
-        /* height: $svgDimensions */
-        z-index: 1
+        z-index: 0
         top: 0
         width: 100%
 
-
-    .containerFixed
-        border: 0px solid #333
-        color: #eee
+    .mainTextBox
         display: flex
-        flex-direction: row
-        text-align: center
+        justify-content: center
+        align-items: flex-start
+        flex: 1
+        width: auto
+        margin: 0
+        top: -80px
         background-color: $raisinblack
-        z-index: 1
-        top: 0
-        width: 100%
-        position: fixed
-        visibility: hidden
 
-
-
-
-@media screen and (max-width:599px)
-    .container
-        border: 0px solid #111
-        color: #eee
-        position: relative
+    .mainTextBox2
         display: flex
-        /* flex-direction: column */
-        flex-direction: row
-        text-align: center
-        background-color: #222
-        height: $svgDimensions
-        z-index: 1
-        top: 0
+        justify-content: center
+        align-items: flex-start
+        flex: 1
+        width: auto
+        margin: 0
+        background-color: $eggshell
+        color: $raisinblack
+
+
+.img #premiums
+    z-index: 1
+    top: 80px
 
 
 
-.mainTextBox
-    display: flex
-    justify-content: center
-    align-items: flex-start
-    flex: 1
-    width: auto
-    margin: 0
+/* @media screen and (max-width:599px) */
+/*     .container */
+/*         border: 0px solid #111 */
+/*         color: #eee */
+/*         position: relative */
+/*         display: flex */
+/*         flex-direction: column */
+/*         text-align: center */
+/*         background-color: $raisinblack */
+/*         z-index: 0 */
+/*         top: 0 */
+/*  */
+/*     .mainTextBox */
+/*         display: flex */
+/*         justify-content: center */
+/*         align-items: flex-start */
+/*         flex: 1 */
+/*         width: auto */
+/*         margin: 0 */
+/*         background-color: $raisinblack */
+/*  */
+/*     .mainTextBox2 */
+/*         display: flex */
+/*         justify-content: center */
+/*         align-items: flex-start */
+/*         flex: 1 */
+/*         width: auto */
+/*         margin: 0 */
+/*         background-color: $eggshell */
 
 
 
 .spacer
-    height: 100px
+    height: 40px
     font-size: 0.5em
     line-height: $svgDimensions
     text-align: center
     background:
         color: $raisinblack
+
+.spacer2
+    height: 40px
+    font-size: 0.5em
+    line-height: $svgDimensions
+    text-align: center
+    background:
+        color: $eggshell
+
+
+
+
+
+
+
 
 
 // After parallax screens

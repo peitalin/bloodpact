@@ -12,6 +12,7 @@ import * as gsap from 'gsap'
 import { TweenLite, TweenMax } from 'gsap'
 
 import Mountain1 from './components/mountain1.js'
+import Premiums from './components/premiums.js'
 
 
 
@@ -79,17 +80,14 @@ class App extends React.Component {
                 mount6demand: document.getElementById('mount6demand'),
                 mount7: document.getElementById('mount7'),
 
-                dither1: document.getElementById('dither1'),
-                dither2: document.getElementById('dither2'),
-                dither3: document.getElementById('dither3'),
-                dither4: document.getElementById('dither4'),
+                // dither1: document.getElementById('dither1'),
+                // dither2: document.getElementById('dither2'),
+                // dither3: document.getElementById('dither3'),
+                // dither4: document.getElementById('dither4'),
                 parallaxBox1: document.getElementById('parallaxBox1'),
                 parallaxBox2: document.getElementById('parallaxBox2'),
                 parallaxBox3: document.getElementById('parallaxBox3'),
                 parallaxBox4: document.getElementById('parallaxBox4'),
-                // forevial: document.getElementById('fore-vial'),
-                forecloud1: document.getElementById('cloud1'),
-                forecloud2: document.getElementById('cloud2'),
                 fixedContainer1: document.getElementById('fixedContainer1'),
                 fixedContainer2: document.getElementById('fixedContainer2'),
                 fixedContainer3: document.getElementById('fixedContainer3'),
@@ -110,13 +108,11 @@ class App extends React.Component {
 
         let e = window.event || event
         let srcElement = e.target || e.srcElement
-        let scrollTop = srcElement.documentElement.scrollTop || srcElement.body.scrollTop
-        // let scrollTop = document.scrollingElement.scrollTop || document.documentElement.scrollTop
-        // console.log(scrollingElement.scrollTop);
 
         this.setState({
-            scrollTop: scrollTop
+            scrollTop: srcElement.documentElement.scrollTop || srcElement.body.scrollTop
         })
+        let scrollTop = this.state.scrollTop
         this.handleResize()
 
         // move document.getElementById('') to componentDidMount for performance
@@ -139,10 +135,10 @@ class App extends React.Component {
         let mount1 = this.state.elems.mount1
         let mount1axes = this.state.elems.mount1axes
 
-        let dither1 = this.state.elems.dither1
-        let dither2 = this.state.elems.dither2
-        let dither3 = this.state.elems.dither3
-        let dither4 = this.state.elems.dither4
+        // let dither1 = this.state.elems.dither1
+        // let dither2 = this.state.elems.dither2
+        // let dither3 = this.state.elems.dither3
+        // let dither4 = this.state.elems.dither4
 
         let parallaxBox1 = this.state.elems.parallaxBox1
         let parallaxBox2 = this.state.elems.parallaxBox2
@@ -168,25 +164,19 @@ class App extends React.Component {
         mount7.style.willchange = 'opacity'
 
 
-        const boundOpacity = (op) => op >= 0.99 ? 0.999 : op.toFixed(2)
-        // Wrap Parallax Windows in requestAnimationFrame for performance
         // parallax window 1
         if ( scrollTop <= threshold1-window.innerHeight/2) {
             logo1.style.transform = `translate3d(0, ${scrollTop/2}%, 0)`
-            // dither1.style.opacity = `${1-boundOpacity(scrollTop/100)}`
 
             mount7.style.transform = `translate3d(0, ${scrollTop/4}%, 0)`
-
-            mount6.style.transform = `translate3d(0, ${scrollTop/5.6}%, 0)`
-            mount6demand.style.transform = `translate3d(0, ${scrollTop/5.6}%, 0)`
-
+            mount6.style.transform = `translate3d(0, ${scrollTop/5.2}%, 0)`
+            mount6demand.style.transform = `translate3d(0, ${scrollTop/5.2}%, 0)`
             mount5.style.transform = `translate3d(0, ${scrollTop/4}%, 0)`
-
-            mount4.style.transform = `translate3d(0, ${scrollTop/6.6}%, 0)`
-            mount4supply.style.transform = `translate3d(0, ${scrollTop/6.6}%, 0)`
-
-            mount3.style.transform = `translate3d(0, ${scrollTop/4.2}%, 0)`
-            mount2.style.transform = `translate3d(0, ${scrollTop/4}%, 0)`
+            mount4.style.transform = `translate3d(0, ${scrollTop/6}%, 0)`
+            mount4supply.style.transform = `translate3d(0, ${scrollTop/6}%, 0)`
+            // mount1axes.style.transform = `translate3d(0, 10%, 0)`
+            mount3.style.transform = `translate3d(0, ${scrollTop/4.4}%, 0)`
+            mount2.style.transform = `translate3d(0, ${scrollTop/4.6}%, 0)`
 
             TweenMax.to("#mount6demand", .5, {opacity: 0})
             TweenMax.to("#mount4supply", .5, {opacity: 0})
@@ -200,49 +190,76 @@ class App extends React.Component {
             TweenMax.to("#mount6", .5, {opacity: 1})
             TweenMax.to("#mount7", .5, {opacity: 1})
 
+        } else {
+            let scrollTopThreshold = threshold1-window.innerHeight/2
+            mount7.style.transform = `translate3d(0, ${scrollTopThreshold/4}%, 0)`
+            mount6.style.transform = `translate3d(0, ${scrollTopThreshold/5.2}%, 0)`
+            mount6demand.style.transform = `translate3d(0, ${scrollTopThreshold/5.2}%, 0)`
+            mount5.style.transform = `translate3d(0, ${scrollTopThreshold/4}%, 0)`
+            mount4.style.transform = `translate3d(0, ${scrollTopThreshold/6}%, 0)`
+            mount4supply.style.transform = `translate3d(0, ${scrollTopThreshold/6}%, 0)`
+            mount1axes.style.transform = `translate3d(0, ${10}%, 0)`
+            mount3.style.transform = `translate3d(0, ${scrollTopThreshold/4.4}%, 0)`
+            mount2.style.transform = `translate3d(0, ${scrollTopThreshold/4.6}%, 0)`
+
         }
+
 
         if ( threshold1 <= scrollTop+window.innerHeight/2 && scrollTop <= threshold2) {
             TweenMax.to("#mount6demand", 1, {opacity: 1, delay: 0})
             TweenMax.to("#mount4supply", 1, {opacity: 1, delay: 0})
             TweenMax.to("#mount1axes", 1, {opacity: 1, delay: 0})
 
-            TweenMax.to("#mount7", 1, {opacity: 0})
+            TweenMax.to("#mount7", 0, {opacity: 0})
             TweenMax.to("#mount6", 1, {opacity: 0})
-            TweenMax.to("#mount5", 1, {opacity: 0})
+            TweenMax.to("#mount5", 0, {opacity: 0})
             TweenMax.to("#mount4", 1, {opacity: 0})
-            TweenMax.to("#mount3", 1, {opacity: 0})
-            TweenMax.to("#mount2", 1, {opacity: 0})
+            TweenMax.to("#mount3", .5, {opacity: 0})
+            TweenMax.to("#mount2", .5, {opacity: 0})
             TweenMax.to("#mount1", 1, {morphSVG: "#mount1rect"})
         }
+
+
+        if ( threshold1 <= scrollTop && scrollTop <= threshold2) {
+            TweenMax.to("#family_line", 1, {morphSVG: "#family_premiums"})
+            TweenMax.to("#individual_line", 1, {morphSVG: "#individual_premiums"})
+            TweenMax.to("#individual_text", 1.5, {opacity: 1})
+            TweenMax.to("#family_text", 2, {opacity: 1})
+        } else {
+            TweenMax.to("#family_line", 1, {morphSVG: "#family_line"})
+            TweenMax.to("#individual_line", 1, {morphSVG: "#individual_line"})
+            TweenMax.to("#individual_text", 0.5, {opacity: 0})
+            TweenMax.to("#family_text", 0.5, {opacity: 0})
+        }
+
 
 
             // parallax window 2
         if ( threshold1 <= scrollTop && scrollTop <= threshold2 ) {
             let scale2 = scrollTop - threshold1
-            logo2.style.transform = `translate3d(0px, ${scale2/2}%, 0px)`
+            logo2.style.transform = `translate3d(0px, ${scale2/1.5}%, 0px)`
             // dither2.style.opacity = `${boundOpacity(scale2/400)}`
         } else {
             // dither2.style.opacity = `0`
         }
 
-            // parallax window 3
-        if ( threshold2 <= scrollTop && scrollTop <= threshold3 ) {
-            let scale3 = scrollTop - threshold2
-            logo3.style.transform = `translate3d(0px, ${scale3/2}%, 0px)`
-            // dither3.style.opacity = `${boundOpacity(scale3/400)}`
-        } else {
-            // dither3.style.opacity = `0`
-        }
+        //     // parallax window 3
+        // if ( threshold2 <= scrollTop && scrollTop <= threshold3 ) {
+        //     let scale3 = scrollTop - threshold2
+        //     logo3.style.transform = `translate3d(0px, ${scale3/2}%, 0px)`
+        //     // dither3.style.opacity = `${boundOpacity(scale3/400)}`
+        // } else {
+        //     // dither3.style.opacity = `0`
+        // }
 
-            // parallax window 4
-        if ( threshold3 <= scrollTop && scrollTop <= threshold5 ) {
-            let scale4 = scrollTop - threshold3
-            logo4.style.transform = `translate3d(0px, ${scale4/2}%, 0px)`
-            dither4.style.opacity = `${boundOpacity(scale4/400)}`
-        } else {
-            dither4.style.opacity = `0`
-        }
+        //     // parallax window 4
+        // if ( threshold3 <= scrollTop && scrollTop <= threshold5 ) {
+        //     let scale4 = scrollTop - threshold3
+        //     logo4.style.transform = `translate3d(0px, ${scale4/2}%, 0px)`
+        //     dither4.style.opacity = `${boundOpacity(scale4/400)}`
+        // } else {
+        //     dither4.style.opacity = `0`
+        // }
 
         // this.toggleFixedContainer()
         // this.animateHeart()
@@ -250,8 +267,6 @@ class App extends React.Component {
         // TweenMax.to("#mount1", 4, {opacity: 0})
         // TweenMax.to("#mount2", 3, {opacity: 0})
         // TweenMax.to("#mount3", 2, {opacity: 0})
-        MorphSVGPlugin.convertToPath('#mount1')
-        MorphSVGPlugin.convertToPath('#mount1rect')
         // TweenMax.to("#mount1", 2, {morphSVG: "#mount1rect"})
 
     }
@@ -281,70 +296,56 @@ class App extends React.Component {
 
                 <div id={"fixedContainer1"} className="container">
                     <div className="mainTextBox">
-                        Blood lasts 5 weeks and supply varies over time.<br/>
-                        We need to repeat donors to smooth blood donations over time.
+                        Blood supply varies over time.<br/>
+                        We need to healthy donors to donate more often.
                     </div>
-                    <div className="spacer" style={{height: 40}}></div>
-                    <div className="mainTextBox">
-						What if you could secure affordable health insurance for family and friends<br/>
-						by donating blood on a regular basis?
+
+                    <Premiums id="id's are named in premiums.js" />
+
+                    <div className="mainTextBox2">
+                        Health insurance premiums are sky-rocketing.<br/>
+                        Much of the cost is in screening individuals for health risks.<br/>
                     </div>
-                    <div className="spacer" style={{height: 40}}></div>
-                    <div className="mainTextBox">
-						As you know, health insurance is bloody expensive.<br/>
-						Much of the cost is in screening and monitoring high risk individuals.<br/>
-						It turns out that blood donors are reguarly screened to ensure their health.
+                    <div className="spacer2"></div>
+
+
+                    <div className="mainTextBox2">
+                        What if you could secure affordable health insurance for family and friends<br/>
+                        by donating blood on a regular basis?
                     </div>
-                    <div className="spacer" style={{height: 40}}></div>
-                    <div className="mainTextBox">
-						Outsourcing screening and monitoring to bloodbanks cuts costs <br/>
-						It also reduces premiums since donors are low-risk (low all-cause mortality)
+                    <div className="spacer2"></div>
+
+                    <div className="mainTextBox2">
+                        Outsourcing screening and monitoring to bloodbanks cuts costs <br/>
+                        It also reduces premiums since donors are low-risk (low all-cause mortality)
                     </div>
+
+                    <div className="spacer2"></div>
+                    <div className="mainTextBox2">
+                        Value proposition (for donors): lower premiums for family and friends. <br/>
+                        Help others by contributing blood, platelets (expires in 5 days) and plasma
+                    </div>
+
+                    <div className="spacer2"></div>
+                    <div className="mainTextBox2">
+                        Value proposition (for underwriters): Blood data on individuals every 3 months.<br/>
+                        Outsource screening to bloodbanks to reduce costs. <br/>
+                        Encourage healthy lifestyles and lower risk and claims.
+                    </div>
+                    <div className="spacer2"></div>
+                    <div className="mainTextBox2">
+                        Value proposition (for bloodbanks): predictable blood supply over time. <br/>
+                        Lower testing costs (testing repeat donors). <br/>
+                        Lower marketing costs. <br/>
+                    </div>
+                    <div className="spacer2"></div>
                 </div>
-                <div className="spacer" style={{height: 80}}>s</div>
-
-
 
 
                 <Parallax id="2" title="Give Blood and Secure Affordable Health Insurance">
-                    <img id="heart-beat" src={require("./img/heart.svg")} />
-                </Parallax>
-                <div id={"fixedContainer2"} className="container">
-                    <div className="textBox">
-						Value proposition (for donors): lower premiums for family and friends. <br/>
-						Help others by contributing blood, platelets (expires in 5 days) and plasma
-                    </div>
-                </div>
-
-
-                <Parallax id="3" title="Blood as premium, Blood as Data, Blood as a product...">
+                    {/* <img id="heart-beat" src={require("./img/heart.svg")} /> */}
                 </Parallax>
 
-                <div id={"fixedContainer2"} className="container">
-                    <div className="textBox">
-						Value proposition (for underwriters): Blood data on individuals every 3 months.<br/>
-						Outsource screening to bloodbanks to reduce costs. <br/>
-						Encourage healthy lifestyles and lower risk and claims.
-                    </div>
-                    <div className="textBox">
-						Value proposition (for bloodbanks): predictable blood supply over time. <br/>
-						Lower testing costs (testing repeat donors). <br/>
-						Lower marketing costs. <br/>
-                    </div>
-                </div>
-
-
-                <Parallax id="4" title="1 pint saves 3 lives, join Bloodpact and nominate 3 others for coverage">
-                </Parallax>
-
-                <div id={"fixedContainer4"} className="container">
-                    <div className="textBox">
-						Using funds raised from selling platelets (expires in 5 days),<br/>
-						We can insure members outside of the Bloodpact network for viral growth: <br/>
-						Nominate friends and strangers for short-term coverage <br/>
-
-                    </div>
-                </div>
 
 
                 <h2>Blood has a shelf life of 5 weeks</h2>

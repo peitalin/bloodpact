@@ -2,6 +2,22 @@
 import React from 'react'
 
 
+// // using SendGrid's Node.js Library
+// // https://github.com/sendgrid/sendgrid-nodejs
+// var sendgrid = require("sendgrid")("SENDGRID_APIKEY");
+// var email = new sendgrid.Email();
+//
+// email.addTo("test@sendgrid.com");
+// email.setFrom("you@youremail.com");
+// email.setSubject("Sending with SendGrid is Fun");
+// email.setHtml("and easy to do anywhere, even with Node.js");
+//
+// sendgrid.send(email);
+//
+// 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
+// https://github.com/sendgrid/sendgrid-nodejs
+
+
 class Form extends React.Component {
     constructor() {
         super();
@@ -18,7 +34,6 @@ class Form extends React.Component {
             messagingSenderId: "98645258248"
         };
         firebase.initializeApp(config);
-        this.rootRef = firebase.database().ref('signups')
     }
 
     componentDidMount() {
@@ -104,6 +119,7 @@ class Form extends React.Component {
             console.log(`You have signed out`);
         }, error => { console.log(error) })
     }
+
 
     registrationStatusBox() {
         if (this.state.user) {
