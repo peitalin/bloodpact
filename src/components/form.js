@@ -14,8 +14,8 @@ import React from 'react'
 //
 // sendgrid.send(email);
 //
-// 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
 // https://github.com/sendgrid/sendgrid-nodejs
+//
 
 
 class Form extends React.Component {

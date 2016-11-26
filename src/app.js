@@ -13,6 +13,7 @@ import { TweenLite, TweenMax } from 'gsap'
 
 import Mountain1 from './components/mountain1.js'
 import Premiums from './components/premiums.js'
+import Vessel from './components/bloodvessel.js'
 
 
 
@@ -52,8 +53,6 @@ class App extends React.Component {
                 threshold1: window.innerHeight,
                 threshold2: getWindowThreshold(2),
                 threshold3: getWindowThreshold(3),
-                threshold4: getWindowThreshold(4),
-                threshold5: getWindowThreshold(5),
             })
         }
     }
@@ -80,17 +79,11 @@ class App extends React.Component {
                 mount6demand: document.getElementById('mount6demand'),
                 mount7: document.getElementById('mount7'),
 
-                // dither1: document.getElementById('dither1'),
-                // dither2: document.getElementById('dither2'),
-                // dither3: document.getElementById('dither3'),
-                // dither4: document.getElementById('dither4'),
                 parallaxBox1: document.getElementById('parallaxBox1'),
                 parallaxBox2: document.getElementById('parallaxBox2'),
                 parallaxBox3: document.getElementById('parallaxBox3'),
                 parallaxBox4: document.getElementById('parallaxBox4'),
-                fixedContainer1: document.getElementById('fixedContainer1'),
-                fixedContainer2: document.getElementById('fixedContainer2'),
-                fixedContainer3: document.getElementById('fixedContainer3'),
+                popUp: document.getElementById('popUp')
             }
         })
 
@@ -106,7 +99,7 @@ class App extends React.Component {
 
     handleScroll(event) {
 
-        let e = window.event || event
+        let e = event || window.event
         let srcElement = e.target || e.srcElement
 
         this.setState({
@@ -221,13 +214,16 @@ class App extends React.Component {
 
 
         if ( threshold1 <= scrollTop && scrollTop <= threshold2) {
+
             TweenMax.to("#family_line", 1, {morphSVG: "#family_premiums"})
             TweenMax.to("#individual_line", 1, {morphSVG: "#individual_premiums"})
+
             TweenMax.to("#individual_text", 1.5, {opacity: 1})
             TweenMax.to("#family_text", 2, {opacity: 1})
         } else {
             TweenMax.to("#family_line", 1, {morphSVG: "#family_line"})
             TweenMax.to("#individual_line", 1, {morphSVG: "#individual_line"})
+
             TweenMax.to("#individual_text", 0.5, {opacity: 0})
             TweenMax.to("#family_text", 0.5, {opacity: 0})
         }
@@ -238,44 +234,26 @@ class App extends React.Component {
         if ( threshold1 <= scrollTop && scrollTop <= threshold2 ) {
             let scale2 = scrollTop - threshold1
             logo2.style.transform = `translate3d(0px, ${scale2/1.5}%, 0px)`
-            // dither2.style.opacity = `${boundOpacity(scale2/400)}`
-        } else {
-            // dither2.style.opacity = `0`
         }
 
-        //     // parallax window 3
-        // if ( threshold2 <= scrollTop && scrollTop <= threshold3 ) {
-        //     let scale3 = scrollTop - threshold2
-        //     logo3.style.transform = `translate3d(0px, ${scale3/2}%, 0px)`
-        //     // dither3.style.opacity = `${boundOpacity(scale3/400)}`
-        // } else {
-        //     // dither3.style.opacity = `0`
-        // }
+        if ( threshold2 <= scrollTop ) {
+            TweenMax.to("#popUp", 0.4, {opacity: 1})
+        } else {
+            TweenMax.to("#popUp", 0.4, {opacity: 0})
+        }
 
-        //     // parallax window 4
-        // if ( threshold3 <= scrollTop && scrollTop <= threshold5 ) {
-        //     let scale4 = scrollTop - threshold3
-        //     logo4.style.transform = `translate3d(0px, ${scale4/2}%, 0px)`
-        //     dither4.style.opacity = `${boundOpacity(scale4/400)}`
-        // } else {
-        //     dither4.style.opacity = `0`
-        // }
 
-        // this.toggleFixedContainer()
-        // this.animateHeart()
-        // TweenLite.to(c1, 5, {opacity: 0})
-        // TweenMax.to("#mount1", 4, {opacity: 0})
-        // TweenMax.to("#mount2", 3, {opacity: 0})
-        // TweenMax.to("#mount3", 2, {opacity: 0})
-        // TweenMax.to("#mount1", 2, {morphSVG: "#mount1rect"})
 
     }
+
+
 
     render() {
         return (
             <div>
 
                 <Parallax id="1" title="Bloodpact: Blood-Backed Health Insurance">
+
                     <img id="mount7" className='mountain' src={require("./img/layer7.svg")} />
 
                     <img id="mount6" className='mountain' src={require("./img/layer6.svg")} />
@@ -295,25 +273,66 @@ class App extends React.Component {
 
 
                 <div id={"fixedContainer1"} className="container">
-                    <div className="mainTextBox">
-                        Blood supply varies over time.<br/>
-                        We need to healthy donors to donate more often.
-                    </div>
+                    <div className="spacer"></div>
+                    <SwitchDiv scroll={this.state.scrollTop} threshold={this.state.threshold1} />
 
                     <Premiums id="id's are named in premiums.js" />
 
-                    <div className="mainTextBox2">
-                        Health insurance premiums are sky-rocketing.<br/>
-                        Much of the cost is in screening individuals for health risks.<br/>
-                    </div>
                     <div className="spacer2"></div>
-
-
                     <div className="mainTextBox2">
-                        What if you could secure affordable health insurance for family and friends<br/>
+                        What if you could obtain affordable health insurance<br/>
                         by donating blood on a regular basis?
                     </div>
                     <div className="spacer2"></div>
+                    <div className="spacer2"></div>
+
+					<div className="spacer"></div>
+                    <h1>How it Works</h1>
+					<div className="spacer"></div>
+
+                    <div className="mainTextBox2">
+                        <h2>1) Join Bloodpact</h2>
+                        Customers sign up and link their health insurance.<br/>
+                        We schedule a time and place for you to give blood.
+                    </div>
+                    <div className="spacer2"></div>
+                    <div className="mainTextBox2">
+                        <h2>2) Donate and Analyze</h2>
+                        We analyze the data and BloodPact insight is sold to Medical researchers
+                        and Insurance firms<br/>
+                        Using these proceeds we then give back by:
+                    </div>
+                    <div className="spacer2"></div>
+                    <div className="mainTextBox2">
+                        <h2>3) Lowering insurance premiums</h2>
+                        Since members are low risk and we can subsidize their premiums.
+                    </div>
+                    <div className="spacer2"></div>
+                    <div className="mainTextBox2">
+                        <h2>4) Reward Others</h2>
+                        Giving members to power to vote and choose either:<br/>
+                        a) Medical research or b) Someone at <a href="http://www.watsi.org">Watsi.org</a> to fund.
+                    </div>
+                    <div className="spacer2"></div>
+                    <div className="mainTextBox2">
+                        <h2>Information is kept secure</h2>
+                        All medical data is encrypted, aggregated and anonymous.
+                    </div>
+                    <div className="spacer2"></div>
+
+                </div>
+
+
+                <Parallax id="2" title="Give Blood and Get Affordable Health Insurance">
+                </Parallax>
+
+
+                <div id={"fixedContainer2"} className="container">
+
+                    <div className="mainTextBox2">
+                        <h2>How this helps Bloodbanks, Insurance Companies <br/>
+                        and the Public Health System</h2>
+                    </div>
 
                     <div className="mainTextBox2">
                         Outsourcing screening and monitoring to bloodbanks cuts costs <br/>
@@ -322,19 +341,19 @@ class App extends React.Component {
 
                     <div className="spacer2"></div>
                     <div className="mainTextBox2">
-                        Value proposition (for donors): lower premiums for family and friends. <br/>
+                        <b>Value proposition (for donors)</b>: lower premiums for family and friends. <br/>
                         Help others by contributing blood, platelets (expires in 5 days) and plasma
                     </div>
 
                     <div className="spacer2"></div>
                     <div className="mainTextBox2">
-                        Value proposition (for underwriters): Blood data on individuals every 3 months.<br/>
+                        <b>Value proposition (for underwriters)</b>: Blood data on individuals every 3 months.<br/>
                         Outsource screening to bloodbanks to reduce costs. <br/>
                         Encourage healthy lifestyles and lower risk and claims.
                     </div>
                     <div className="spacer2"></div>
                     <div className="mainTextBox2">
-                        Value proposition (for bloodbanks): predictable blood supply over time. <br/>
+                        <b>Value proposition (for bloodbanks)</b>: predictable blood supply over time. <br/>
                         Lower testing costs (testing repeat donors). <br/>
                         Lower marketing costs. <br/>
                     </div>
@@ -342,13 +361,10 @@ class App extends React.Component {
                 </div>
 
 
-                <Parallax id="2" title="Give Blood and Secure Affordable Health Insurance">
-                    {/* <img id="heart-beat" src={require("./img/heart.svg")} /> */}
-                </Parallax>
 
 
 
-                <h2>Blood has a shelf life of 5 weeks</h2>
+
                 <div className='textGrid'>
                     <div className="svgFloater">
                         <img src={require("./img/healthpack.svg")} />
@@ -366,6 +382,7 @@ class App extends React.Component {
                     </div>
                 </div>
 
+                <div className="spacer"></div>
                 <div className="spacer"></div>
                 <div className='textGrid'>
                     <div className="svgFloater">
@@ -385,66 +402,43 @@ class App extends React.Component {
                 </div>
 
 
-                <div className="spacer"></div>
-                <h2>Sign up for more information</h2>
-                <div className="textGridSingle">
-                    <div className="textBox"> <Form /> </div>
+                <div id="popUp">
+                    <h2>Sign up for more information</h2>
+                    <div className="textGridSingle">
+                        <div className="textBox"> <Form /> </div>
+                    </div>
                 </div>
+
+                <div className="spacer"></div>
+                <div className="spacer"></div>
+                <div className="spacer"></div>
                 <div className="spacer"></div>
             </div>
         );
     }
 
-    toggleFixedContainer() {
-        let scrollTop = this.state.scrollTop
-        let fixedContainer1 = this.state.elems.fixedContainer1
-        let fixedContainer2 = this.state.elems.fixedContainer2
-        let fixedContainer3 = this.state.elems.fixedContainer3
-        let threshold1 = this.state.threshold1
-        let threshold2 = this.state.threshold2
-        let threshold3 = this.state.threshold3
 
-        // 1st fixed container
-        if (threshold1 <= scrollTop && scrollTop <= threshold2) {
-            fixedContainer1.style.position = 'fixed'
-        } else {
-            fixedContainer1.style.position = 'relative'
-        }
-        // 2nd fixed container
-        if (threshold2 <= scrollTop && scrollTop <= threshold3) {
-            fixedContainer2.style.position = 'fixed'
-        } else {
-            fixedContainer2.style.position = 'relative'
-        }
-
-
-
-    }
-
-
-    animateHeart() {
-        // Heart animation
-        let scrollTop = this.state.scrollTop
-        let heart = document.getElementById('heart-beat')
-        let lastRotationValue = scrollTop / 1000 * Math.exp(-scrollTop/800)
-        let transRate = scrollTop/4
-        let transRate2 = scrollTop/ (4 / (1+(scrollTop - 650)/2000))
-
-        if (scrollTop <= 650) {
-            heart.style.transform = `
-                translate3d(0, ${transRate}%, 0)
-                rotate(${0.7 + lastRotationValue}turn)
-            `
-        }
-        if (650 < scrollTop && scrollTop < this.state.threshold2) {
-            heart.style.transform = `
-                translate3d(0, ${transRate2}%, 0)
-                rotate(${0.7 + lastRotationValue}turn)
-            `
-        }
-    }
 }
 
+
+const SwitchDiv = (props) => {
+    if (props.scroll < props.threshold) {
+        return (
+            <div id="mainTextBox1" className="mainTextBox">
+                Problem 1: Blood supply varies unpredictably over time.<br/>
+                We need to regular donations from healthy people.
+            </div>
+        )
+
+    } else {
+        return (
+            <div id="mainTextBox2" className="mainTextBox">
+                Problem 2: Health insurance premiums are sky-rocketing.<br/>
+                Much of the cost is in screening individuals for health risks.
+            </div>
+        )
+    }
+}
 
 
 export default App;

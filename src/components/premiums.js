@@ -4,18 +4,18 @@ import React from 'react'
 const Premiums = (props) => {
     return (
         <svg id="premiums" viewBox="0 0 691.2 267.62">
-            <polygon id="family_premiums" style={{fill: '#703a53'}} class="cls-1"
+            <polygon id="family_premiums" style={{fill: '#703a53'}} className="cls-1"
                 points="0 179.38 100.24 151.44 123.82 151.43 144.96 139.5 187.87 126.82 208.71 131.05 232 116.68 276.14 104.84 321.5 96.38 345.6 101.43 363.79 91.31 409.15 83.7 452.01 67.07 497.42 65.1 542.78 49.88 584.46 43.97 629.18 39.73 671.5 10.15 691.2 0 691.2 267.62 0 267.62 0 215.19 0 179.38"/>
-            <polygon id="family_line" class="cls-1" style={{fill: '#703a53'}}
+            <polygon id="family_line" className="cls-1" style={{fill: '#703a53'}}
                 points="0 265.84 100.24 265.29 123.82 265.29 144.96 265.05 187.87 264.8 208.71 264.88 232 264.6 276.14 264.36 321.5 264.19 345.6 264.29 363.79 264.09 409.15 263.94 452.01 263.61 497.42 263.57 542.78 263.27 584.46 263.15 629.18 263.06 671.5 262.48 691.2 262.27 691.2 267.6 0 267.6 0 266.55 0 265.84"/>
-            <polygon id="individual_premiums" class="cls-2" style={{fill: '#f7f4e8'}}
+            <polygon id="individual_premiums" className="cls-2" style={{fill: '#f7f4e8'}}
                 points="83.6 192.09 131.38 185.24 173.49 177.25 214.79 177.25 260.14 170.4 307.12 165.84 351.66 165.84 394.58 160.13 438.31 152.14 482.86 152.14 526.59 145.29 568.7 137.3 617.29 129.31 659.4 121.33 691.2 109.91 691.2 267.62 0 267.62 0 206.92 83.6 192.09"/>
-            <polygon id="individual_line" class="cls-2" style={{fill: '#f7f4e8'}}
+            <polygon id="individual_line" className="cls-2" style={{fill: '#f7f4e8'}}
                 points="83.6 265.05 131.38 264.82 173.49 264.54 214.79 264.54 260.14 264.31 307.12 264.15 351.66 264.15 394.58 263.96 438.31 263.69 482.86 263.69 526.59 263.45 568.7 263.18 617.29 262.91 659.4 262.64 691.2 262.25 691.2 267.62 0 267.62 0 265.56 83.6 265.05"/>
-            <text id='family_text' style={{fill: '#f7f4e8'}} class="cls-3" transform="translate(550.11 100)">
+            <text id='family_text' style={{fill: '#f7f4e8'}} className="cls-3" transform="translate(550.11 100)">
                 Family Cover
             </text>
-            <text id='individual_text' style={{fill: '#703a53'}} class="cls-4" transform="translate(524.79 182)">
+            <text id='individual_text' style={{fill: '#703a53'}} className="cls-4" transform="translate(524.79 182)">
                 Individual Cover
             </text>
         </svg>

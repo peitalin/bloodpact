@@ -107,7 +107,7 @@ h2
 
 
 .logo
-    height: 60px
+    height: 66px
     width: 100%
     display: flex
     align-items: center
@@ -124,12 +124,7 @@ h2
 #logo1
     margin-top: -25%
 #logo2
-    margin-top: -50%
-#logo3
-    margin-top: -25%
-#logo4
-    margin-top: -250px
-    background-color: transparentize(#222, 0.2)
+    margin-top: -100%
 
 
 .parallaxItems
@@ -138,16 +133,6 @@ h2
     position: absolute
     bottom: 0px
 
-
-#heart-beat
-    -webkit-transform: translateZ(0)
-    -moz-transform: translateZ(0)
-    -ms-transform: translateZ(0)
-    -o-transform: translateZ(0)
-    height: 280px
-    position: absolute
-    top: 50%
-    right: 17%
 
 
 .mountain
@@ -196,8 +181,6 @@ h2
 #mount7
     bottom: 16%
 
-
-
 #family_premiums
     visibility: hidden
 
@@ -212,35 +195,22 @@ $svgDimensions: 100px
 @media screen and (min-width:600px)
     .container
         border: 0px solid #333
-        color: #eee
         position: relative
         display: flex
         flex-direction: column
         text-align: center
         background-color: $raisinblack
-        z-index: 0
-        top: 0
-        width: 100%
 
     .mainTextBox
-        display: flex
-        justify-content: center
-        align-items: flex-start
-        flex: 1
-        width: auto
-        margin: 0
-        top: -80px
         background-color: $raisinblack
+        color: $eggshell
+        font-size: 1.2em
+
 
     .mainTextBox2
-        display: flex
-        justify-content: center
-        align-items: flex-start
-        flex: 1
-        width: auto
-        margin: 0
         background-color: $eggshell
         color: $raisinblack
+        font-size: 1.2em
 
 
 .img #premiums
@@ -248,6 +218,23 @@ $svgDimensions: 100px
     top: 80px
 
 
+#popUp
+    display: fixed
+    position: fixed
+    bottom: 2%
+    right: 2%
+    background-color: $eggshell
+    border: 2px solid $raisinblack
+    padding: 2%
+    opacity: 0
+
+
+.vessel
+    height: $svgDimensions
+
+
+#vessel_end
+    visibility: hidden
 
 /* @media screen and (max-width:599px) */
 /*     .container */
