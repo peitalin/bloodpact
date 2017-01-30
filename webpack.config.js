@@ -1,12 +1,14 @@
 
 var path = require('path');
 var process = require('process');
+var webpack = require('webpack');
 
+// Production environment
 var isProduction = process.env.NODE_ENV === 'production';
 var buildPath = path.resolve(__dirname, 'public');
 var mainPath = path.resolve(__dirname, 'src', 'main.js');
 
-console.log("Is production: " + isProduction);
+console.log("NODE_ENV == 'production': " + isProduction);
 
 var entryEnv = isProduction
     ? mainPath
@@ -21,7 +23,22 @@ var pluginsEnv = isProduction
     ? ['transform-decorators-legacy']
     : ['transform-decorators-legacy', 'react-hot-loader/babel'];
 
+var sourceMap = isProduction
+    ? false
+    : 'inline-source-map'
 
+new webpack.DefinePlugin({
+    'process.env': {
+        NODE_ENV: JSON.stringify('production')
+    }
+})
+new webpack.optimize.UglifyJsPlugin()
+new webpack.optimize.DedupePlugin()
+
+
+
+
+// Main configs
 module.exports = {
     entry: entryEnv,
     output: {
@@ -29,12 +46,26 @@ module.exports = {
         filename: 'bundle.js',
     },
     debug: true,
-    devtool: 'inline-source-map',
+    devtool: sourceMap,
     devServer: {
         inline: true,
         contentBase: './src',
         port: 3333
     },
+    // externals: {
+    //     "react": "React",
+    //     "react-dom": "ReactDOM"
+    // },
+    externals: {
+        "inferno": "Inferno",
+        // "inferno-component": "Component"
+    },
+    // resolve: {
+    //     alias: {
+    //       'react': 'inferno-compat',
+    //       'react-dom': 'inferno-compat'
+    //     }
+    // },
     module: {
         loaders: [
             {
@@ -43,6 +74,7 @@ module.exports = {
                 loader: 'babel',
                 query: {
                     plugins: pluginsEnv,
+                    plugins: ['inferno'],
                     presets: ['react', 'es2015', 'stage-2']
                 }
             },
@@ -71,5 +103,5 @@ module.exports = {
                 include: path.resolve(__dirname, 'src')
             }
         ]
-    }
+    },
 };

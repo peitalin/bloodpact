@@ -1,24 +1,29 @@
 
 
-import React from 'react'
-import './app.sass'
-import './sun.scss'
-import FixedContainer from './components/FixedContainer.js'
-import Parallax from './components/Parallax.js'
+// import React from 'react'
+// let Component = React.Component
+
+import Inferno from 'inferno';
+import Component from 'inferno-component';
+
+import { TweenMax } from 'gsap'
+import { throttle } from 'lodash'
+
 import Form from './components/Form.js'
-// import { Field, reduxForm } from 'redux-form'
-
-import * as gsap from 'gsap'
-import { TweenLite, TweenMax } from 'gsap'
-
-import Mountain1 from './components/mountain1.js'
-import Premiums from './components/premiums.js'
-import Vessel from './components/bloodvessel.js'
+import Mountain1 from './components/Mountain1.js'
+import Calendar from './components/Calendar.js'
+import { SwitchDiv, SwitchSpacer, SwitchGraphLabels } from './components/SwitchElems.js'
 
 
+import './app.sass'
+import './components/mountains.sass'
+import './components/premiums.sass'
+import './components/Parallax.scss'
 
 
-class App extends React.Component {
+
+
+class MainSite extends Component {
 
     constructor(props) {
         super();
@@ -27,47 +32,48 @@ class App extends React.Component {
             threshold1: 0,
             threshold2: 0,
             threshold3: 0,
-            threshold4: 0,
-            threshold5: 0,
-            bannerHeight: 0,
             windowHeight: 0,
+            windowWidth: 0,
+            animations: true,
+            signUp: false,
+            eggshell: '#f7f4e9',
+            raisinblack: '#270b20',
+            raisinpurple: '#703a53',
             elems: {},
         }
+        // ALWAYS BIND IN CONSTRUCTOR
+        this.handleScroll = throttle(this.handleScroll.bind(this), 150)
+        this.handleResize = throttle(this.handleResize.bind(this), 150)
     }
 
     handleResize() {
-        if (this.state.windowHeight == window.innerHeight) {
+        if (this.state.windowHeight == window.innerHeight && this.state.windowWidth == window.innerWidth) {
             return;
         } else {
-            console.log('windowHeight changed!');
+            // console.log(`windowHeight: ${window.innerHeight}, windowWidth: ${window.innerWidth}`);
             this.setState({
-                windowHeight: window.innerHeight,
-                bannerHeight: document.getElementById('fixedContainer1').clientHeight
+                windowWidth: window.innerWidth
             })
-            // THRESHOLDS FOR Fixed containers/placeholders
-            // window-height * n plus (n-1)*100px for the placeholder
-            const getWindowThreshold = (n) => {
-                return (window.innerHeight*1.4 + 300 + (n-1)*(window.innerHeight + this.state.bannerHeight))
-            }
+            // let fixedContainerHeight = document.getElementById('fixedContainer1').clientHeight
             this.setState({
-                threshold1: window.innerHeight,
-                threshold2: getWindowThreshold(2),
-                threshold3: getWindowThreshold(3),
+                // threshold1: window.innerHeight * 1/6,
+                threshold1: window.innerHeight * 1/5,
+                // threshold2: window.innerHeight * 2/6,
+                threshold2: window.innerHeight * 100,
+                threshold3: window.innerHeight,
             })
         }
+        this.scaleParallaxHeight()
     }
 
     componentDidMount() {
-        window.addEventListener( 'scroll', this.handleScroll.bind(this));
-        window.addEventListener('onresize', this.handleResize.bind(this))
-
+        window.addEventListener( 'scroll', this.handleScroll );
+        window.addEventListener( 'resize', this.handleResize )
+        this.handleResize()
         this.setState({
             elems: {
                 logo1: document.getElementById('logo1'),
-                logo2: document.getElementById('logo2'),
-                logo3: document.getElementById('logo3'),
-                logo4: document.getElementById('logo4'),
-
+                logoButtons: document.getElementById('logoButtons'),
                 mount1: document.getElementById('mount1'),
                 mount1axes: document.getElementById('mount1axes'),
                 mount2: document.getElementById('mount2'),
@@ -78,172 +84,222 @@ class App extends React.Component {
                 mount6: document.getElementById('mount6'),
                 mount6demand: document.getElementById('mount6demand'),
                 mount7: document.getElementById('mount7'),
-
                 parallaxBox1: document.getElementById('parallaxBox1'),
-                parallaxBox2: document.getElementById('parallaxBox2'),
-                parallaxBox3: document.getElementById('parallaxBox3'),
-                parallaxBox4: document.getElementById('parallaxBox4'),
-                popUp: document.getElementById('popUp')
             }
         })
-
 
     }
 
     componentWillUnmount() {
-        window.removeEventListener('scroll', this.handleScroll);
-        window.removeEventListener('onresize', this.handleResize);
+        window.removeEventListener( 'scroll', this.handleScroll );
+        window.removeEventListener( 'resize', this.handleResize )
     }
 
+    toggleParallax() {
+        if (this.state.animations === false) {
+            this.setState({animations: true})
+            // window.scroll(0, this.state.threshold1 + 80)
+        } else {
+            this.setState({animations: false})
+        }
+    }
+
+    scaleParallaxHeight() {
+        var viewportRatio = window.innerWidth / window.innerHeight
+        var viewportScale = (viewportRatio > 1.4) ? 0.3 : 0.25
+        document.getElementById("parallaxBox1").style.transitionDuration = "height 200ms ease"
+        document.getElementById("parallaxBox1").style.height = `
+            ${Math.round( (viewportRatio - viewportScale * viewportRatio) * 100 )}vh
+        `
+
+        setTimeout(function() {
+            document.getElementById("parallaxBox1").style.transitionDuration = "height 20000s ease"
+        }, 200)
+        // document.getElementById("parallaxBox1").style.transitionDuration = "height 20s ease"
+        // temporary fix, make screen transition so slow that there is not jank on android mobile
+        // problem is the auto-hiding url-bar on mobile browsers
+
+        // var calendarScale = (1/viewportRatio * 10 < 8) ? 8 : 1/viewportRatio * 10
+        // document.getElementsByClassName("calendar")[0].style.bottom = `${ calendarScale }%`
+    }
 
 
     handleScroll(event) {
 
-        let e = event || window.event
-        let srcElement = e.target || e.srcElement
+        function getScrollTop(event) {
+            let e = event || window.event
+            let srcElement = e.target || e.srcElement
+            return srcElement.documentElement.scrollTop || srcElement.body.scrollTop
+        }
 
-        this.setState({
-            scrollTop: srcElement.documentElement.scrollTop || srcElement.body.scrollTop
-        })
+        if (window.innerHeight > window.innerWidth) {
+            this.setState({
+                scrollTop: event ? getScrollTop(event) : 0,
+                animations: false
+            })
+        } else {
+            this.setState({
+                scrollTop: event ? getScrollTop(event) : 0,
+            })
+        }
         let scrollTop = this.state.scrollTop
-        this.handleResize()
+        // console.log(scrollTop);
 
-        // move document.getElementById('') to componentDidMount for performance
-        // so that it won't lookup elemens every time there is a scroll event
-        let logo1 = this.state.elems.logo1
-        let logo2 = this.state.elems.logo2
-        let logo3 = this.state.elems.logo3
-        let logo4 = this.state.elems.logo4
-
-        let mount7 = this.state.elems.mount7
-        let mount6 = this.state.elems.mount6
-        let mount6demand = this.state.elems.mount6demand
-
-        let mount5 = this.state.elems.mount5
-        let mount4 = this.state.elems.mount4
-        let mount4supply = this.state.elems.mount4supply
-
-        let mount3 = this.state.elems.mount3
-        let mount2 = this.state.elems.mount2
-        let mount1 = this.state.elems.mount1
-        let mount1axes = this.state.elems.mount1axes
-
-        // let dither1 = this.state.elems.dither1
-        // let dither2 = this.state.elems.dither2
-        // let dither3 = this.state.elems.dither3
-        // let dither4 = this.state.elems.dither4
-
-        let parallaxBox1 = this.state.elems.parallaxBox1
-        let parallaxBox2 = this.state.elems.parallaxBox2
-        let parallaxBox3 = this.state.elems.parallaxBox3
-        let parallaxBox4 = this.state.elems.parallaxBox4
+        let { mount7, mount6, mount6demand, mount5,
+                mount4, mount4supply, mount3, mount2, mount1, mount1axes,
+                logo1, logoButtons, parallaxBox1 } = this.state.elems
+        let { threshold1, threshold2, threshold3 } = this.state
 
 
-        let threshold1 = this.state.threshold1
-        let threshold2 = this.state.threshold2
-        let threshold3 = this.state.threshold3
-        let threshold4 = this.state.threshold4
-        let threshold5 = this.state.threshold5
+        if (this.state.animations === true) {
+            if ( scrollTop <= threshold1 * 5 ) {
+                // lets browser know ahead of time about CSS transforms
+                mount2.style.willchange = 'opacity transform'
+                mount3.style.willchange = 'opacity transform'
+                mount4.style.willchange = 'opacity transform'
+                mount4supply.style.willchange = 'opacity transform'
+                mount5.style.willchange = 'opacity transform'
+                mount6.style.willchange = 'opacity transform'
+                mount6demand.style.willchange = 'opacity transform'
+                mount7.style.willchange = 'opacity transform'
+            } else {
+                mount2.style.willchange = 'initial'
+                mount3.style.willchange = 'initial'
+                mount4.style.willchange = 'initial'
+                mount4supply.style.willchange = 'initial'
+                mount5.style.willchange = 'initial'
+                mount6.style.willchange = 'initial'
+                mount6demand.style.willchange = 'initial'
+                mount7.style.willchange = 'initial'
+            }
 
-        // lets browser know ahead of time about CSS transforms
-        mount1axes.style.willchange = 'opacity'
-        mount2.style.willchange = 'opacity'
-        mount3.style.willchange = 'opacity'
-        mount4.style.willchange = 'opacity'
-        mount4supply.style.willchange = 'opacity'
-        mount5.style.willchange = 'opacity'
-        mount6.style.willchange = 'opacity'
-        mount6demand.style.willchange = 'opacity'
-        mount7.style.willchange = 'opacity'
+
+            // parallax window 1
+            if ( scrollTop <= threshold1 ) {
+
+                mount7.style.transform = `translate3d(0, ${scrollTop/1.0}px, 0)`
+                mount6.style.transform = `translate3d(0, ${scrollTop/1.1}px, 0)`
+                mount6demand.style.transform = `translate3d(0, ${scrollTop/1.1}px, 0)`
+                mount5.style.transform = `translate3d(0, ${scrollTop/1.4}px, 0)`
+                mount4.style.transform = `translate3d(0, ${scrollTop/1.6}px, 0)`
+                mount4supply.style.transform = `translate3d(0, ${scrollTop/1.6}px, 0)`
+                mount3.style.transform = `translate3d(0, ${scrollTop/2.0}px, 0)`
+                mount2.style.transform = `translate3d(0, ${scrollTop/2.6}px, 0)`
+                mount1axes.style.transform = `translate3d(0, 10px, 0)`
+
+                TweenMax.to("#mount7", .2, {opacity: 1})
+                TweenMax.to("#mount6", .2, {opacity: 1})
+                TweenMax.to("#mount5", .2, {opacity: 1})
+                TweenMax.to("#mount4", .2, {opacity: 1})
+                TweenMax.to("#mount3", .2, {opacity: 1})
+                TweenMax.to("#mount2", .2, {opacity: 1})
+                TweenMax.to("#mount1polygon", .4, {morphSVG: "#mount1polygon"})
+                TweenMax.to(".logo", .2, {opacity: 1})
+
+                // TweenMax.to("#alexa", .2, {opacity: 1})
+                // TweenMax.to("#alexa", 0, {scale: 1 + scrollTop/2000, y: scrollTop/1.2, x: -scrollTop/10})
+                logo1.style.transform = `translate3d(0, ${scrollTop/1.6}px, 0)`
+                logoButtons.style.transform = `translate3d(0, ${scrollTop/1.6}px, 0)`
+
+                TweenMax.to("#mount6demand", .2, {opacity: 0})
+                TweenMax.to("#mount4supply", .2, {opacity: 0})
+
+                TweenMax.to("#mount1axes", .2, {opacity: 0})
+                // TweenMax.to(".calendar", .2, {opacity: 0})
+                TweenMax.to(".blood_graph_text", .2, {opacity: 0})
+                TweenMax.to("#parallaxTextbox", .2, {opacity: 0})
+
+            } else {
+                let scrollTopThreshold = threshold1
+                logo1.style.transform = `translate3d(0, ${scrollTop/1.6}px, 0)`
+                logoButtons.style.transform = `translate3d(0, ${scrollTop/1.6}px, 0)`
+                mount7.style.transform = `translate3d(0, ${scrollTopThreshold/1.0}px, 0)`
+                mount6.style.transform = `translate3d(0, ${scrollTopThreshold/1.1}px, 0)`
+                mount6demand.style.transform = `translate3d(0, ${scrollTopThreshold/1.1}px, 0)`
+                mount5.style.transform = `translate3d(0, ${scrollTopThreshold/1.3}px, 0)`
+                mount4.style.transform = `translate3d(0, ${scrollTopThreshold/1.5}px, 0)`
+                mount4supply.style.transform = `translate3d(0, ${scrollTopThreshold/1.5}px, 0)`
+                mount3.style.transform = `translate3d(0, ${scrollTopThreshold/2.0}px, 0)`
+                mount2.style.transform = `translate3d(0, ${scrollTopThreshold/2.6}px, 0)`
+
+                TweenMax.to("#mount7", .2, {opacity: 0})
+                TweenMax.to("#mount6", .2, {opacity: 0})
+                TweenMax.to("#mount5", .2, {opacity: 0})
+                TweenMax.to("#mount4", .2, {opacity: 0})
+                TweenMax.to("#mount3", .2, {opacity: 0})
+                TweenMax.to("#mount2", .2, {opacity: 0})
+                TweenMax.to("#mount1polygon", .4, {morphSVG: "#mount1rect"})
+                TweenMax.to(".logo", .2, {opacity: 0})
 
 
-        // parallax window 1
-        if ( scrollTop <= threshold1-window.innerHeight/2) {
-            logo1.style.transform = `translate3d(0, ${scrollTop/2}%, 0)`
+                TweenMax.to("#mount1axes", .2, {opacity: 1})
+                mount1axes.style.transform = `translate3d(0, 10px, 0)`
+                // TweenMax.to(".calendar", .2, {opacity: 1})
+                TweenMax.to("#parallaxTextbox", .4, {opacity: 1})
 
-            mount7.style.transform = `translate3d(0, ${scrollTop/4}%, 0)`
-            mount6.style.transform = `translate3d(0, ${scrollTop/5.2}%, 0)`
-            mount6demand.style.transform = `translate3d(0, ${scrollTop/5.2}%, 0)`
-            mount5.style.transform = `translate3d(0, ${scrollTop/4}%, 0)`
-            mount4.style.transform = `translate3d(0, ${scrollTop/6}%, 0)`
-            mount4supply.style.transform = `translate3d(0, ${scrollTop/6}%, 0)`
-            // mount1axes.style.transform = `translate3d(0, 10%, 0)`
-            mount3.style.transform = `translate3d(0, ${scrollTop/4.4}%, 0)`
-            mount2.style.transform = `translate3d(0, ${scrollTop/4.6}%, 0)`
+            }
 
-            TweenMax.to("#mount6demand", .5, {opacity: 0})
-            TweenMax.to("#mount4supply", .5, {opacity: 0})
-            TweenMax.to("#mount1axes", .5, {opacity: 0})
+            if ( threshold1 <= scrollTop ) {
+                TweenMax.to("#mount6demand", .2, {opacity: 1})
+                TweenMax.to("#mount4supply", .2, {opacity: 1})
+                TweenMax.to(".blood_graph_text", .1, {opacity: 1})
+            } else {
+                TweenMax.to("#mount6demand", .2, {opacity: 0})
+                TweenMax.to("#mount4supply", .2, {opacity: 0})
+                TweenMax.to(".blood_graph_text", .1, {opacity: 0})
+            }
 
-            TweenMax.to("#mount1", 1, {morphSVG: "#mount1"})
-            TweenMax.to("#mount2", .5, {opacity: 1})
-            TweenMax.to("#mount3", .5, {opacity: 1})
-            TweenMax.to("#mount4", .5, {opacity: 1})
-            TweenMax.to("#mount5", .5, {opacity: 1})
-            TweenMax.to("#mount6", .5, {opacity: 1})
-            TweenMax.to("#mount7", .5, {opacity: 1})
 
+            // if ( threshold1 <= scrollTop && scrollTop <= threshold2 ) {
+            //     TweenMax.to("#mount6demand", .2, {opacity: 1})
+            //     TweenMax.to("#mount4supply", .2, {opacity: 1})
+            //     TweenMax.to(".blood_graph_text", .1, {opacity: 1})
+            // } else {
+            //     TweenMax.to("#mount6demand", .2, {opacity: 0})
+            //     TweenMax.to("#mount4supply", .2, {opacity: 0})
+            //     TweenMax.to(".blood_graph_text", .1, {opacity: 0})
+            // }
+            //
+
+            // if ( threshold2 <= scrollTop) {
+            //     TweenMax.to(".premiums", .1, {opacity: 1})
+            //     TweenMax.to(".premiums_graph_text", .1, {opacity: 1})
+            //     TweenMax.to(".solution_text", .1, {opacity: 1})
+            //     TweenMax.to(".year", 1, {opacity: 1})
+            // } else {
+            //     TweenMax.to(".premiums", .1, {opacity: 0})
+            //     TweenMax.to(".premiums_graph_text", .1, {opacity: 0})
+            //     TweenMax.to(".solution_text", .1, {opacity: 0})
+            //     TweenMax.to(".year", .1, {opacity: 0})
+            // }
+
+        }
+
+        if ( threshold1 < scrollTop ) {
+            TweenMax.to("#navBar", 0.2, {opacity: 0})
         } else {
-            let scrollTopThreshold = threshold1-window.innerHeight/2
-            mount7.style.transform = `translate3d(0, ${scrollTopThreshold/4}%, 0)`
-            mount6.style.transform = `translate3d(0, ${scrollTopThreshold/5.2}%, 0)`
-            mount6demand.style.transform = `translate3d(0, ${scrollTopThreshold/5.2}%, 0)`
-            mount5.style.transform = `translate3d(0, ${scrollTopThreshold/4}%, 0)`
-            mount4.style.transform = `translate3d(0, ${scrollTopThreshold/6}%, 0)`
-            mount4supply.style.transform = `translate3d(0, ${scrollTopThreshold/6}%, 0)`
-            mount1axes.style.transform = `translate3d(0, ${10}%, 0)`
-            mount3.style.transform = `translate3d(0, ${scrollTopThreshold/4.4}%, 0)`
-            mount2.style.transform = `translate3d(0, ${scrollTopThreshold/4.6}%, 0)`
-
+            TweenMax.to("#navBar", 0.2, {opacity: 1})
         }
 
-
-        if ( threshold1 <= scrollTop+window.innerHeight/2 && scrollTop <= threshold2) {
-            TweenMax.to("#mount6demand", 1, {opacity: 1, delay: 0})
-            TweenMax.to("#mount4supply", 1, {opacity: 1, delay: 0})
-            TweenMax.to("#mount1axes", 1, {opacity: 1, delay: 0})
-
-            TweenMax.to("#mount7", 0, {opacity: 0})
-            TweenMax.to("#mount6", 1, {opacity: 0})
-            TweenMax.to("#mount5", 0, {opacity: 0})
-            TweenMax.to("#mount4", 1, {opacity: 0})
-            TweenMax.to("#mount3", .5, {opacity: 0})
-            TweenMax.to("#mount2", .5, {opacity: 0})
-            TweenMax.to("#mount1", 1, {morphSVG: "#mount1rect"})
+        if ( threshold1 < scrollTop ) {
+            this.setState({signUp: false})
+            TweenMax.to("#popUp", 0.2, {opacity: 0})
+        }
+        if ( scrollTop > threshold3 * 2 ) {
+            this.setState({signUp: true})
+            TweenMax.to("#popUp", 0.2, {opacity: 1})
         }
 
+    }
 
-        if ( threshold1 <= scrollTop && scrollTop <= threshold2) {
-
-            TweenMax.to("#family_line", 1, {morphSVG: "#family_premiums"})
-            TweenMax.to("#individual_line", 1, {morphSVG: "#individual_premiums"})
-
-            TweenMax.to("#individual_text", 1.5, {opacity: 1})
-            TweenMax.to("#family_text", 2, {opacity: 1})
+    toggleSignup() {
+        if (this.state.signUp == false) {
+            this.setState({signUp: true})
+            TweenMax.to("#popUp", 0.2, {opacity: 1})
         } else {
-            TweenMax.to("#family_line", 1, {morphSVG: "#family_line"})
-            TweenMax.to("#individual_line", 1, {morphSVG: "#individual_line"})
-
-            TweenMax.to("#individual_text", 0.5, {opacity: 0})
-            TweenMax.to("#family_text", 0.5, {opacity: 0})
+            this.setState({signUp: false})
+            TweenMax.to("#popUp", 0.2, {opacity: 0})
         }
-
-
-
-            // parallax window 2
-        if ( threshold1 <= scrollTop && scrollTop <= threshold2 ) {
-            let scale2 = scrollTop - threshold1
-            logo2.style.transform = `translate3d(0px, ${scale2/1.5}%, 0px)`
-        }
-
-        if ( threshold2 <= scrollTop ) {
-            TweenMax.to("#popUp", 0.4, {opacity: 1})
-        } else {
-            TweenMax.to("#popUp", 0.4, {opacity: 0})
-        }
-
-
-
     }
 
 
@@ -252,193 +308,135 @@ class App extends React.Component {
         return (
             <div>
 
-                <Parallax id="1" title="Bloodpact: Blood-Backed Health Insurance">
-
-                    <img id="mount7" className='mountain' src={require("./img/layer7.svg")} />
-
-                    <img id="mount6" className='mountain' src={require("./img/layer6.svg")} />
-                    <img id="mount6demand" className='mountain' src={require("./img/demand.svg")} />
-
-                    <img id="mount5" className='mountain' src={require("./img/layer5.svg")} />
-
-                    <img id="mount4" className='mountain' src={require("./img/layer4.svg")} />
-                    <img id="mount4supply" className='mountain' src={require("./img/supply.svg")} />
-
-                    <img id="mount3" className='mountain' src={require("./img/layer3.svg")} />
-                    <img id="mount2" className='mountain' src={require("./img/layer2.svg")} />
-
+                <div className="parallax" id="parallaxBox1">
+                    <img id="mount7" className='mountain' src={require("./img/mount7.svg")} />
+                    <img id="mount6" className='mountain' src={require("./img/mount6.svg")} />
+                    <img id="mount6demand" className='mountain' src={require("./img/mount6demand.svg")} />
+                    <img id="mount5" className='mountain' src={require("./img/mount5.svg")} />
+                    <img id="mount4" className='mountain' src={require("./img/mount4.svg")} />
+                    <img id="mount4supply" className='mountain' src={require("./img/mount4supply.svg")} />
+                    <img id="mount3" className='mountain' src={require("./img/mount3.svg")} />
+                    <img id="mount2" className='mountain' src={require("./img/mount2.svg")} />
                     <img id="mount1axes" className='mountain' src={require("./img/axes.svg")} />
-                    <Mountain1 id="mount1" />
-                </Parallax>
 
+                    <img id="premiums_family" className="premiums" src={require("./img/premiums_family.svg")} />
+                    <img id="premiums_individual" className="premiums" src={require("./img/premiums_individual.svg")} />
 
-                <div id={"fixedContainer1"} className="container">
-                    <div className="spacer"></div>
-                    <SwitchDiv scroll={this.state.scrollTop} threshold={this.state.threshold1} />
+                    <SwitchGraphLabels scrollTop={this.state.scrollTop} threshold={this.state.threshold2} />
 
-                    <Premiums id="id's are named in premiums.js" />
-
-                    <div className="spacer2"></div>
-                    <div className="mainTextBox2">
-                        What if you could obtain affordable health insurance<br/>
-                        by donating blood on a regular basis?
+                    <div id="parallaxTextbox">
+                        <SwitchDiv className="mainTextBox"
+                            scrollTop={this.state.scrollTop}
+                            threshold={this.state.threshold2} />
                     </div>
-                    <div className="spacer2"></div>
-                    <div className="spacer2"></div>
 
-					<div className="spacer"></div>
-                    <h1>How it Works</h1>
-					<div className="spacer"></div>
+                    <Mountain1 id="mount1" fill={this.state.rainsinblack} />
 
-                    <div className="mainTextBox2">
+                    <img id="logo1" className="logo" src={require("./img/dark_logo_transparent_background.svg")} />
+                    <div className="logo" id="logoButtons">
+                        <button className="signupButtonMain" onClick={this.toggleSignup.bind(this)}> Sign Up </button>
+                        <span> </span>
+                        <button className="signupButtonMain" onClick={this.toggleParallax.bind(this)}>
+                            { this.state.animations ? "Parallax Off" : "Parallax On" }
+                        </button>
+                    </div>
+                </div>
+
+
+
+                <div className="spacerDark"></div>
+                <div className="spacerDark"></div>
+                <div className="spacerDark"></div>
+                <div className="solution_text">
+                    <h1>Cheap, Comprehensive Health Cover for Blood Donors.</h1>
+                </div>
+                <div className="spacerDark"></div>
+                <div className="spacerDark"></div>
+                <div className="spacerDark"></div>
+                <div className="spacerDark"></div>
+
+
+                <div id={"fixedContainer2"} className="containerDark">
+                    <div id="fixMobileBorders" style={{backgroundColor: this.state.raisinblack}}>
+                        <h1>Save a Life and Save on Insurance Premiums.</h1>
+
                         <h2>1) Join Bloodpact</h2>
-                        Customers sign up and link their health insurance.<br/>
-                        We schedule a time and place for you to give blood.
-                    </div>
-                    <div className="spacer2"></div>
-                    <div className="mainTextBox2">
-                        <h2>2) Donate and Analyze</h2>
-                        We analyze the data and BloodPact insight is sold to Medical researchers
-                        and Insurance firms<br/>
-                        Using these proceeds we then give back by:
-                    </div>
-                    <div className="spacer2"></div>
-                    <div className="mainTextBox2">
-                        <h2>3) Lowering insurance premiums</h2>
-                        Since members are low risk and we can subsidize their premiums.
-                    </div>
-                    <div className="spacer2"></div>
-                    <div className="mainTextBox2">
-                        <h2>4) Reward Others</h2>
-                        Giving members to power to vote and choose either:<br/>
-                        a) Medical research or b) Someone at <a href="http://www.watsi.org">Watsi.org</a> to fund.
-                    </div>
-                    <div className="spacer2"></div>
-                    <div className="mainTextBox2">
-                        <h2>Information is kept secure</h2>
-                        All medical data is encrypted, aggregated and anonymous.
-                    </div>
-                    <div className="spacer2"></div>
+                            <img className="svgIcon" src={require("./img/fake-blood.svg")} />
+                            <div className="textBox">
+                                Sign up and link health insurance details.
+                                We schedule a time for you to give blood twice a year.
+                            </div>
+                        <div className="spacerDark"></div>
 
-                </div>
+                        <div className="mainTextBox">
+                            <img className="svgIcon" src={require("./img/piggy_bank.svg")} />
+                            <h2>2) Lower Insurance Premiums</h2>
+                            You are eligible for health cover savings.
+                        </div>
+                        <div className="spacerDark"></div>
 
+                        <div className="mainTextBox">
+                            <img className="svgIcon" src={require("./img/contract.svg")} />
+                            <h2>3) Blood Data Analysis</h2>
+                            Opt to share blood data with medical researchers and actuaries.<br/>
+                            We sell the data to further reduce health premiums.
+                        </div>
+                        <div className="spacerDark"></div>
 
-                <Parallax id="2" title="Give Blood and Get Affordable Health Insurance">
-                </Parallax>
+                        <div className="mainTextBox">
+                            <img className="svgIcon" src={require("./img/gift.svg")} />
+                            <h2>4) Reward Others</h2>
+                            Vote to fund:<br/>
+                            a) Medical research, or <br/>
+                            b) A patient at <a href="http://www.watsi.org">Watsi.org</a>.
+                        </div>
+                        <div className="spacerDark"></div>
 
 
-                <div id={"fixedContainer2"} className="container">
+                        <img className="bannerPic" src={require("./img/bg5.png")} style={{width: "100vw"}}/>
 
-                    <div className="mainTextBox2">
-                        <h2>How this helps Bloodbanks, Insurance Companies <br/>
-                        and the Public Health System</h2>
-                    </div>
-
-                    <div className="mainTextBox2">
-                        Outsourcing screening and monitoring to bloodbanks cuts costs <br/>
-                        It also reduces premiums since donors are low-risk (low all-cause mortality)
-                    </div>
-
-                    <div className="spacer2"></div>
-                    <div className="mainTextBox2">
-                        <b>Value proposition (for donors)</b>: lower premiums for family and friends. <br/>
-                        Help others by contributing blood, platelets (expires in 5 days) and plasma
-                    </div>
-
-                    <div className="spacer2"></div>
-                    <div className="mainTextBox2">
-                        <b>Value proposition (for underwriters)</b>: Blood data on individuals every 3 months.<br/>
-                        Outsource screening to bloodbanks to reduce costs. <br/>
-                        Encourage healthy lifestyles and lower risk and claims.
-                    </div>
-                    <div className="spacer2"></div>
-                    <div className="mainTextBox2">
-                        <b>Value proposition (for bloodbanks)</b>: predictable blood supply over time. <br/>
-                        Lower testing costs (testing repeat donors). <br/>
-                        Lower marketing costs. <br/>
-                    </div>
-                    <div className="spacer2"></div>
-                </div>
-
-
-
-
-
-
-                <div className='textGrid'>
-                    <div className="svgFloater">
-                        <img src={require("./img/healthpack.svg")} />
-                    </div>
-                    <div className="textBox">
-                        This means that blood supply is unpredictably low at times.
-                        People give blood at random times throughout their lives.
-                    </div>
-                    <div className="svgFloater">
-                        <img src={require("./img/transfusion2.svg")} />
-                    </div>
-                    <div className="textBox">
-                        Bloodpact provides a reliable and predictable stream of blood donations,
-                        so that hospitals will be better at planning and allocating blood over seasons.
+                        <div className="spacerDark"></div>
+                        <div className="mainTextBox">
+                            <img className="svgIcon" src={require("./img/security.svg")} />
+                            <h2>Information is kept secure</h2>
+                            All medical data is encrypted, aggregated and anonymous.
+                        </div>
+                        <div className="spacerDark"></div>
                     </div>
                 </div>
 
-                <div className="spacer"></div>
-                <div className="spacer"></div>
-                <div className='textGrid'>
-                    <div className="svgFloater">
-                        <img src={require("./img/transfusion3.svg")} />
-                    </div>
-                    <div className="textBox">
-                        Bloodpact donors  will be assigned different dates to
-                        spread blood supply evenly throughout the year.
-                    </div>
-                    <div className="svgFloater">
-                        <img src={require("./img/finger.svg")} />
-                    </div>
-                    <div className="textBox">
-                        No waste, no over or undersupply across time.
-                        Predictable blood donations.
-                    </div>
-                </div>
+                <div className="spacerDark"></div>
+                <div className="spacerDark"></div>
+                <div className="spacerDark"></div>
+                <div className="spacerDark"></div>
 
-
-                <div id="popUp">
-                    <h2>Sign up for more information</h2>
-                    <div className="textGridSingle">
-                        <div className="textBox"> <Form /> </div>
-                    </div>
-                </div>
-
-                <div className="spacer"></div>
-                <div className="spacer"></div>
-                <div className="spacer"></div>
-                <div className="spacer"></div>
             </div>
         );
     }
-
-
 }
 
 
-const SwitchDiv = (props) => {
-    if (props.scroll < props.threshold) {
-        return (
-            <div id="mainTextBox1" className="mainTextBox">
-                Problem 1: Blood supply varies unpredictably over time.<br/>
-                We need to regular donations from healthy people.
-            </div>
-        )
 
-    } else {
-        return (
-            <div id="mainTextBox2" className="mainTextBox">
-                Problem 2: Health insurance premiums are sky-rocketing.<br/>
-                Much of the cost is in screening individuals for health risks.
-            </div>
-        )
-    }
+
+const SignUp = () => (
+    <div id="popUp">
+        <h2>Sign up for more Information</h2>
+        <div className="textBox">
+            <Form />
+        </div>
+    </div>
+)
+
+
+const App = () => {
+    return (
+        <div>
+            <MainSite />
+            <SignUp />
+        </div>
+    )
 }
+
 
 
 export default App;

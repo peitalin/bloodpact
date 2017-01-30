@@ -1,24 +1,14 @@
 
-import React from 'react'
+// import React from 'react'
+// let Component = React.Component
+
+import Inferno from 'inferno';
+import Component from 'inferno-component';
+
+import firebase from 'firebase'
 
 
-// // using SendGrid's Node.js Library
-// // https://github.com/sendgrid/sendgrid-nodejs
-// var sendgrid = require("sendgrid")("SENDGRID_APIKEY");
-// var email = new sendgrid.Email();
-//
-// email.addTo("test@sendgrid.com");
-// email.setFrom("you@youremail.com");
-// email.setSubject("Sending with SendGrid is Fun");
-// email.setHtml("and easy to do anywhere, even with Node.js");
-//
-// sendgrid.send(email);
-//
-// https://github.com/sendgrid/sendgrid-nodejs
-//
-
-
-class Form extends React.Component {
+class Form extends Component {
     constructor() {
         super();
         this.state = {
@@ -33,11 +23,12 @@ class Form extends React.Component {
             storageBucket: "bloodpact-796e0.appspot.com",
             messagingSenderId: "98645258248"
         };
-        firebase.initializeApp(config);
+        this.fireApp = firebase.initializeApp(config);
+
     }
 
     componentDidMount() {
-        firebase.auth().onAuthStateChanged(user => {
+        this.fireBaseListener = firebase.auth().onAuthStateChanged(user => {
             if (user) {
                 this.setState({
                     user: user,
@@ -45,6 +36,11 @@ class Form extends React.Component {
                 })
             }
         })
+    }
+
+    componentWillUnmount() {
+        // unmount firebase.auth().onAuthStateChanged
+        this.fireBaseListener();
     }
 
     handleChange(event) {
@@ -120,12 +116,11 @@ class Form extends React.Component {
         }, error => { console.log(error) })
     }
 
-
     registrationStatusBox() {
         if (this.state.user) {
             return <div>
                     <div className='signInStatus'>
-                        {this.state.signInStatus}<br/>
+                        { this.state.signInStatus }<br/>
                     </div>
                     <div className='signInStatus'>
                         <button className='signoutButton' onClick={this.handleSignout.bind(this)}>
@@ -136,17 +131,15 @@ class Form extends React.Component {
         } else {
             return (
                 <div>
-                    <div className="signInStatus">
-                        <input className='signupForm' type="email"
-                            placeholder="info@bloodpact.io"
-                            value={this.state.email}
-                            onChange={this.handleChange.bind(this)} />
-                        <button className='signupButton' onClick={this.handleSubmit.bind(this)} >
-                            Submit
-                        </button>
-                    </div>
-                    <div className="signInStatus">
-                        {this.state.signInStatus}
+                    <input className='signupForm' type="email"
+                        placeholder="info@bloodpact.io"
+                        value={this.state.email}
+                        onChange={this.handleChange.bind(this)} />
+                    <button className='signupButton' onClick={this.handleSubmit.bind(this)} >
+                        Submit
+                    </button>
+                    <div className="signInStatus" style={{marginTop: '10px'}}>
+                        { this.state.signInStatus }
                     </div>
                 </div>
             )
@@ -156,7 +149,7 @@ class Form extends React.Component {
     render() {
         return (
             <div>
-                {this.registrationStatusBox()}
+                { this.registrationStatusBox() }
             </div>
         )
     }

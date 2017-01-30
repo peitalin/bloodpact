@@ -1,226 +1,90 @@
 
 
-$font-stack:    Open Sans, Helvetica, sans-serif
+$font-stack:   Open Sans, PT Sans, sans-serif
 $bloodred: #812
 $white: #eee
 $eggshell: #f7f4e9
 $raisinblack: #270b20
-// $body-bg: transparent
+$raisinpurple: #703a53
+$raisinviolet: #9a7586
 $body-bg: $eggshell
 
-/* * */
-/*   -webkit-box-sizing: border-box */
-/*      -moz-box-sizing: border-box */
-/*           box-sizing: border-box */
+
 
 body
+    overflow-x: hidden
     font: 100% $font-stack
     font-size: 1em
-    color: #222
+    color: $raisinblack
     width: 100vw
     margin: 0px
     padding: 0px
+    background-color: $raisinblack
+    transition-duration: 500ms
+    transition-timing-function: ease-in
+
+
 
 h1
     font-size: 1.6rem
     font-weight:  400
     font-variant: small-caps
     text-align: center
-    color: #eee
+    color: $eggshell
 
 h2
     font-size: 1.4rem
     text-align: center
-    color: $bloodred
+    color: $raisinviolet
 
-
-
-
-
-.header
+ul
+    margin: 1%
     position: fixed
-    top: 0
-    left: 0
-    width: 100%
-    background-color: #cab
-
-
-.footer
-    position: fixed
-    bottom: 0
-    left: 0
-    width: 100%
-    background-color: #cab
-
-
-// Parallax
-.parallax
-    position: relative
-    height: 100vh
-    overflow: hidden
-    background:
-        size: auto 100vh
-        position: 50% 50%
-        attachment: fixed
-
-#parallaxBox1
-    -webkit-transform: translateZ(0)
-    -moz-transform: translateZ(0)
-    -ms-transform: translateZ(0)
-    -o-transform: translateZ(0)
-    background:
-        color: $eggshell
-        // image: url('./img/layer7.svg')
-    height: 140vh
-
-#parallaxBox2
-    background-image: url('./img/bg2.svg')
-#parallaxBox3
-    background-image: url('./img/bg3.svg')
-#parallaxBox4
-    background-image: url('./img/bg4.svg')
-    height: 160vh
-
-
-
-.dither
-    height: 100vh
-    opacity: 0
-    -webkit-transform: translateZ(0)
-    -moz-transform: translateZ(0)
-    -ms-transform: translateZ(0)
-    -o-transform: translateZ(0)
-    transform: translateZ(0)
-    background:
-        size: auto 100vh
-        position: top center
-        attachment: fixed
-        color: transparentize($bloodred, 0)
-
-#dither1
-    background-color: #261B1B
-    height: 140vh
-
-#dither4
-    background-color: #222
-    height: 160vh
-
-
-.logo
-    height: 66px
-    width: 100%
-    display: flex
-    align-items: center
-    justify-content: center
-    -webkit-transform: translateZ(0)
-    -moz-transform: translateZ(0)
-    -ms-transform: translateZ(0)
-    -o-transform: translateZ(0)
-    background:
-        color: transparentize($bloodred, 0.3)
-    position: absolute
-    top: 50%
-
-#logo1
-    margin-top: -25%
-#logo2
-    margin-top: -100%
-
-
-.parallaxItems
-    height: 150px
-    width: 150px
-    position: absolute
-    bottom: 0px
-
-
-
-.mountain
-    -webkit-transform: translateZ(0)
-    -moz-transform: translateZ(0)
-    -ms-transform: translateZ(0)
-    -o-transform: translateZ(0)
-    position: absolute
-    width: 101vw
-    bottom: 0%
-    right: 0%
-
-#mount1
-    bottom: -1%
-
-#mount1rect
-    bottom: -1%
-    visibility: hidden
-    // shape to morph into (flat line), must be hidden
-#mount1axes
-    bottom: -1%
-    z-index: 1
-    opacity: 0
-
-#mount2
-    bottom: 10%
-
-#mount3
-    bottom: 12%
-
-#mount4
-    bottom: 14%
-#mount4supply
-    bottom: 14%
-    opacity: 0
-
-#mount5
-    bottom: 16%
-
-#mount6
-    bottom: 16%
-#mount6demand
-    bottom: 16%
-    opacity: 0
-
-#mount7
-    bottom: 16%
-
-#family_premiums
-    visibility: hidden
-
-#individual_premiums
-    visibility: hidden
+    z-index: 2
+    color: #222
 
 ////////////////////////////////////////////
 
 
-$svgDimensions: 100px
-
-@media screen and (min-width:600px)
-    .container
-        border: 0px solid #333
-        position: relative
-        display: flex
-        flex-direction: column
-        text-align: center
-        background-color: $raisinblack
-
-    .mainTextBox
-        background-color: $raisinblack
-        color: $eggshell
-        font-size: 1.2em
 
 
-    .mainTextBox2
-        background-color: $eggshell
-        color: $raisinblack
-        font-size: 1.2em
+
+.containerDark
+    overflow-x: hidden
+    position: relative
+    display: flex
+    flex-direction: column
+    text-align: center
+    /* align-items: center */
+    justify-content: center
+    background-color: $raisinblack
+    color: $eggshell
+    font-size: 1.1em
+
+.containerLight
+    overflow-x: hidden
+    position: relative
+    display: flex
+    flex-direction: column
+    text-align: center
+    justify-content: center
+    background-color: $eggshell
+    color: $raisinblack
+    font-size: 1.1em
 
 
-.img #premiums
-    z-index: 1
-    top: 80px
+
+.mainTextBox
+    width: 100vw
+    text-align: center
+    justify-content: center
+    align-items: stretch
 
 
 #popUp
     display: fixed
     position: fixed
+    z-index: 5
     bottom: 2%
     right: 2%
     background-color: $eggshell
@@ -229,75 +93,46 @@ $svgDimensions: 100px
     opacity: 0
 
 
-.vessel
-    height: $svgDimensions
+/* #popUp */
+/*     display: fixed */
+/*     position: fixed */
+/*     z-index: 5 */
+/*     top: 20% */
+/*     right: 50% */
+/*     background-color: $eggshell */
+/*     border: 2px solid $raisinblack */
+/*     padding: 2% */
 
 
-#vessel_end
-    visibility: hidden
-
-/* @media screen and (max-width:599px) */
-/*     .container */
-/*         border: 0px solid #111 */
-/*         color: #eee */
-/*         position: relative */
-/*         display: flex */
-/*         flex-direction: column */
-/*         text-align: center */
-/*         background-color: $raisinblack */
-/*         z-index: 0 */
-/*         top: 0 */
-/*  */
-/*     .mainTextBox */
-/*         display: flex */
-/*         justify-content: center */
-/*         align-items: flex-start */
-/*         flex: 1 */
-/*         width: auto */
-/*         margin: 0 */
-/*         background-color: $raisinblack */
-/*  */
-/*     .mainTextBox2 */
-/*         display: flex */
-/*         justify-content: center */
-/*         align-items: flex-start */
-/*         flex: 1 */
-/*         width: auto */
-/*         margin: 0 */
-/*         background-color: $eggshell */
-
-
-
-.spacer
+.spacerLight
     height: 40px
+    width: 100%
     font-size: 0.5em
-    line-height: $svgDimensions
+    line-height: 100px
     text-align: center
-    background:
-        color: $raisinblack
+    background-color: $eggshell
 
-.spacer2
+.spacerDark
     height: 40px
+    width: 100%
     font-size: 0.5em
-    line-height: $svgDimensions
+    line-height: 100px
     text-align: center
-    background:
-        color: $eggshell
-
-
-
-
-
+    background-color: $raisinblack
 
 
 
 
 // After parallax screens
+$svgDimensions: 120px
 
-.svgFloater
-    flex: 1
+.bannerPic
+    width: 100vw
+
+.svgIcon
     max-width: $svgDimensions
     max-height: $svgDimensions
+    flex: 1
 
 .textBox
     display: flex
@@ -305,7 +140,7 @@ $svgDimensions: 100px
     align-items: center
     flex: 2
     width: auto
-    margin: 2%
+    margin: 1%
 
 
 .textGrid
@@ -313,7 +148,7 @@ $svgDimensions: 100px
     flex: 0 1 50%
     justify-content: center
     align-items: center
-    margin: 2%
+    margin: 1%
 
 .textGridSingle
     display: flex
@@ -325,11 +160,41 @@ $svgDimensions: 100px
     display: flex
     justify-content: center
     color: transparentize(#6c6, 0.1)
+    margin-top: 10px
+    margin-bottom: 10px
 
 .signupForm
-    font-size: 1rem
+    font-size: 1.1rem
+    border: none
 
-.signupButton
-    font-size: 1rem
 
+button
+    font-size: 1rem
+    border: none
+    background: $raisinpurple
+    color: $eggshell
+    font-family: Futura
+
+button:hover
+    background: $raisinviolet
+
+
+.signupButtonMain
+    padding-top: 5px
+    padding-bottom: 5px
+    width: 120px
+    border: 2px solid $raisinblack;
+
+.signupButtonMain:hover
+    padding-top: 5px
+    padding-bottom: 5px
+    width: 120px
+    border: 2px solid $raisinblack;
+
+
+input[type=email]:valid
+    background: #dfd
+
+input[type=email]:invalid
+    background: #fdd
 

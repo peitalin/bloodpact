@@ -1,0 +1,99 @@
+
+$font-stack:   Open Sans, PT Sans, sans-serif;
+$bloodred: #812;
+$white: #eee;
+$eggshell: #f7f4e9;
+$raisinblack: #270b20;
+$raisinpurple: #703a53;
+$body-bg: $eggshell;
+
+
+
+// Parallax
+.parallax {
+    position: relative;
+    background-repeat: no-repeat no-repeat;
+    overflow: hidden;
+    background-size: 100 auto;
+    background-position: 50% 50%;
+    background-attachment: fixed;
+}
+
+#parallaxBox1 {
+    padding-top: .5em;
+    background-color: $eggshell;
+    height: 100vh;
+    // temporary fix, make screen transition so slow that there is not jank on android mobile
+    // transition: height .1s ease;
+    // -webkit-transition: height .1s ease;
+}
+
+
+
+#parallaxTextbox {
+    position: absolute;
+    display: flex;
+    justify-content: center;
+    text-align: center;
+    align-items: center;
+    font-size: 1.1em;
+    background-color: transparentize($raisinblack, 0);
+    bottom: -1px;
+    opacity: 0;
+}
+
+
+
+
+.logo {
+    position: absolute;
+    top: 20%;
+    left: 50%;
+    transition-duration: 200ms;
+    transition-timing-function: linear;
+}
+
+@media (max-width: 599px) {
+    #logo1 {
+        margin-left: -100px;
+        width: 200px;
+    }
+}
+
+@media (min-width: 600px) and (max-width: 719px) {
+    #logo1 {
+        margin-left: -200px;
+        width: 400px;
+    }
+}
+
+@media (min-width: 720px) and (max-width: 899px) {
+    #logo1 {
+        margin-left: -250px;
+        width: 500px;
+    }
+}
+
+@media (min-width:900px) and (max-width:1200px) {
+    #logo1 {
+        margin-left: -300px;
+        width: 600px;
+    }
+}
+
+@media (min-width:1200px) {
+    #logo1 {
+        margin-left: -400px;
+        width: 800px;
+    }
+}
+
+
+
+
+
+#logoButtons {
+    top: 50%;
+    margin-left: -120px + 2;
+}
+
