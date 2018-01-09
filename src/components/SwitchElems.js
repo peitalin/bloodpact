@@ -1,5 +1,4 @@
-// import React from 'react';
-import Inferno from 'inferno';
+import React from 'react';
 
 const SwitchDiv = (props) => {
     if (props.scrollTop < props.threshold) {

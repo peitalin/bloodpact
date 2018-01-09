@@ -1,6 +1,5 @@
 
-// import React from 'react'
-import Inferno from 'inferno';
+import React from 'react'
 
 const Calendar = (props) => {
     if (props.scroll < props.threshold) {

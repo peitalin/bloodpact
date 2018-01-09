@@ -1,10 +1,6 @@
 
-
-// import React from 'react'
-// let Component = React.Component
-
-import Inferno from 'inferno';
-import Component from 'inferno-component';
+import React from "react";
+import ReactDOM from 'react-dom';
 
 import { TweenMax } from 'gsap'
 import { throttle } from 'lodash'
@@ -23,7 +19,7 @@ import './components/Parallax.scss'
 
 
 
-class MainSite extends Component {
+class MainSite extends React.Component {
 
     constructor(props) {
         super();
@@ -302,12 +298,9 @@ class MainSite extends Component {
         }
     }
 
-
-
     render() {
         return (
             <div>
-
                 <div className="parallax" id="parallaxBox1">
                     <img id="mount7" className='mountain' src={require("./img/mount7.svg")} />
                     <img id="mount6" className='mountain' src={require("./img/mount6.svg")} />

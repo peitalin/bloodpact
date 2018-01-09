@@ -1,6 +1,5 @@
 
-// import React from 'react'
-import Inferno from 'inferno';
+import React from 'react'
 
 const Mountain = (props) => {
   let mountainFill = props.fill ? props.fill : '#270b20'

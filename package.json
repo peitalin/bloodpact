@@ -17,11 +17,11 @@
     "firebase": "^3.4.1",
     "global": "^4.3.1",
     "gsap": "^1.19.0",
-    "inferno": "^1.2.2",
-    "inferno-compat": "^1.2.2",
-    "inferno-component": "^1.2.2",
-    "react": "^15.3.2",
-    "react-dom": "^15.3.2",
+    "inferno": "^3.10.1",
+    "inferno-compat": "^3.10.1",
+    "inferno-component": "^3.10.1",
+    "react": "^16.2.0",
+    "react-dom": "^16.2.0",
     "react-router": "next"
   },
   "devDependencies": {

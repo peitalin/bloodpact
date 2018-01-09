@@ -57,7 +57,7 @@ module.exports = {
     //     "react-dom": "ReactDOM"
     // },
     externals: {
-        "inferno": "Inferno",
+        // "inferno": "Inferno",
         // "inferno-component": "Component"
     },
     // resolve: {
@@ -74,7 +74,6 @@ module.exports = {
                 loader: 'babel',
                 query: {
                     plugins: pluginsEnv,
-                    plugins: ['inferno'],
                     presets: ['react', 'es2015', 'stage-2']
                 }
             },

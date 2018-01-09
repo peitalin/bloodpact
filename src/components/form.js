@@ -1,9 +1,9 @@
 
-// import React from 'react'
-// let Component = React.Component
+import React from 'react'
+let Component = React.Component
 
-import Inferno from 'inferno';
-import Component from 'inferno-component';
+// import Inferno from 'inferno';
+// import Component from 'inferno-component';
 
 import firebase from 'firebase'
 
